@@ -1,0 +1,19 @@
+{
+  "name": "reflectos",
+  "version": "1.0.0",
+  "description": "OS for smart mirrors",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vijaykumar51/ReflectOS.git"
+  },
+  "author": "Vijay Kumar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vijaykumar51/ReflectOS/issues"
+  },
+  "homepage": "https://github.com/vijaykumar51/ReflectOS#readme"
+}
