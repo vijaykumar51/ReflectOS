@@ -6,7 +6,7 @@ var mainWindow;
 
 function createMainWindow() {
 	mainWindow = new BrowserWindow(mainWindowConfig);
-	mainWindow.loadURL(`file://${__dirname}/index.html`);
+	mainWindow.loadURL(`http://localhost:4200`);
 
 	mainWindow.on("closed", () => {
 		mainWindow = null;

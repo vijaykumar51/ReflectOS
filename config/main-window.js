@@ -1,9 +1,9 @@
 var mainWindowConfig = {
-	width: 500,
-	height: 500,
+	width: 800,
+	height: 800,
 	x: 0,
 	y: 0,
-	resizable: false,
+	resizable: true,
 	title: "Reflect OS",
 	backgroundColor: "#efefef",
 	darkTheme: true
