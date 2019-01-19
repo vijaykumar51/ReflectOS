@@ -1,11 +1,14 @@
 {
 	"widgetName": "weather",
 	"widgetType": "information",
+	"apiUrl": "https://api.openweathermap.org/data/2.5/weather",
+	"apiProvider": "openWeather",
 	"widgetConfig": {
-		"apiUrl": "https://api.openweathermap.org/data/2.5/weather",
-		"apiProvider": "openWeather",
 		"city": "jind",
 		"countryCode": "in",
-		"refreshFrequency": 600
+		"units": "metric",
+		"refreshFrequency": 600,
+		"resizable": true,
+		"dragable": true
 	}
 }

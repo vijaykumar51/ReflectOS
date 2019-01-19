@@ -2,14 +2,13 @@ const request = require("request");
 const tokens = require("@tokens");
 const config = require("./config.json");
 
-exports.get = async (req, res) => {
+exports.getWeatherInfo = async (req, res) => {
 	let token = tokens[config.widgetName];
-	console;
-	let openWeatherApiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${
-		config.widgetConfig.city
-	},${config.widgetConfig.countryCode}&appid=${token}`;
+	let openWeatherApiUrl = `${config.apiUrl}?q=${config.widgetConfig.city},${
+		config.widgetConfig.countryCode
+	}&units=${config.widgetConfig.units}&appid=${token}`;
 
-	request.get(openWeatherApiUrl, (error, respose, body) => {
+	request.get(openWeatherApiUrl, (error, response, body) => {
 		if (error) {
 			console.log("error", error);
 			res.send(error);

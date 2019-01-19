@@ -1,0 +1,7 @@
+[
+	{
+		"widgetName": "weather",
+		"default": true,
+		"displayOnHome": true
+	}
+]

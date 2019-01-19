@@ -24,7 +24,6 @@
 	},
 	"homepage": "https://github.com/vijaykumar51/ReflectOS#readme",
 	"_moduleAliases": {
-		"@cred": "./server/credentials",
 		"@tokens": "./server/credentials/tokens.json",
 		"@widgets": "./server/widgets/"
 	},
