@@ -23,6 +23,11 @@
 		"url": "https://github.com/vijaykumar51/ReflectOS/issues"
 	},
 	"homepage": "https://github.com/vijaykumar51/ReflectOS#readme",
+	"_moduleAliases": {
+		"@cred": "./server/credentials",
+		"@tokens": "./server/credentials/tokens.json",
+		"@widgets": "./server/widgets/"
+	},
 	"dependencies": {
 		"@angular/animations": "~7.2.0",
 		"@angular/common": "~7.2.0",
@@ -34,6 +39,8 @@
 		"@angular/router": "~7.2.0",
 		"core-js": "^2.5.4",
 		"express": "^4.16.4",
+		"module-alias": "^2.1.0",
+		"request": "^2.88.0",
 		"rxjs": "~6.3.3",
 		"tslib": "^1.9.0",
 		"zone.js": "~0.8.26"
