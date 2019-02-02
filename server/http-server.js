@@ -5,10 +5,12 @@ var routes = require("@widgets/weather/weather.route");
 var app = express();
 const port = 9090;
 
+app.use(express.static(__dirname + "/public"));
+
 app.use("/", routes);
 
 app.get("/", (req, res) => {
-	res.send("Express server");
+	res.sendFile(__dirname + "/index.html");
 });
 
 app.listen(port, () => {

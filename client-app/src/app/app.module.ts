@@ -1,18 +1,22 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule, Injector } from "@angular/core";
+import { createCustomElement } from "@angular/elements";
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { CardComponent } from "./components/card-element/card.component";
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+	declarations: [CardComponent],
+	imports: [BrowserModule],
+	providers: [],
+	entryComponents: [CardComponent]
 })
-export class AppModule { }
+export class AppModule {
+	constructor(private injector: Injector) {}
+
+	ngDoBootstrap() {
+		const el = createCustomElement(CardComponent, {
+			injector: this.injector
+		});
+		customElements.define("card-element", el);
+	}
+}
