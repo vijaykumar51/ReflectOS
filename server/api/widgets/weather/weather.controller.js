@@ -2,7 +2,7 @@ const request = require("request");
 const tokens = require("@tokens");
 const config = require("./config.json");
 
-exports.getWeatherInfo = async (req, res) => {
+exports.getWeatherInfo = (req, res) => {
 	let token = tokens[config.widgetName];
 	let openWeatherApiUrl = `${config.apiUrl}?q=${config.widgetConfig.city},${
 		config.widgetConfig.countryCode

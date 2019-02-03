@@ -2,6 +2,7 @@
 	"widgetName": "weather",
 	"widgetType": "information",
 	"apiUrl": "https://api.openweathermap.org/data/2.5/weather",
+	"clientApiUrl": "api/weather",
 	"apiProvider": "openWeather",
 	"widgetConfig": {
 		"city": "jind",

@@ -8,11 +8,14 @@ const WIDGET_CONFIG = "widget-config.json";
 exports.getConfig = async () => {
 	let response = {};
 	response["widgets"] = {};
+
+	// read widget parent config
 	let widgetGlobalConfig = fs.readFileSync(
 		path.resolve(WIDGET_DIR, WIDGET_CONFIG),
 		"utf-8"
 	);
 
+	// read individual widget config file
 	let configFiles = glob.sync("**/config.json", { cwd: WIDGET_DIR });
 	configFiles.forEach(file => {
 		let widgetConfig = JSON.parse(

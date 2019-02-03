@@ -69,9 +69,6 @@ weatherTemplate.innerHTML = `
 			:host {
 				display: block;
 			}
-			h2 {
-				color: #567;
-			}
 		</style>
 		<div>
 			<div>Weather: <span id="cityName"><span></div>

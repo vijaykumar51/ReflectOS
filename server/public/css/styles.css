@@ -1,7 +1,36 @@
 body {
 	font-family: "Open Sans", sans-serif;
+	background: url("../images/blurred-7.jpg");
+	background-size: cover;
+	color: #ffc;
+	padding: 0;
+	margin: 0;
 }
 .heading {
 	font-weight: 600;
 	font-size: 30px;
+}
+
+.tabContainer {
+	background: transparent;
+	border-bottom: 2px solid #ffc;
+	box-shadow: 2px 2px 6px rgb(175, 175, 149);
+}
+
+.tabOptions {
+	display: flex;
+}
+
+.tabOptions .option {
+	border-right: 2px solid #ffc;
+	cursor: pointer;
+	font-size: 20px;
+	padding: 10px 30px;
+}
+
+.tabOptions .option:hover {
+	color: #013243;
+	opacity: 0.7;
+	/* background: rgb(218, 218, 158); */
+	background: #f0f0d6;
 }

@@ -11,15 +11,47 @@
 	</head>
 	<body>
 		<script src="widgets/weather/weather.template.js"></script>
+		<div class="topContainer">
+			<div class="tabContainer">
+				<div class="tabOptionContainer">
+					<div class="tabOptions">
+						<div class="option home">Home</div>
+						<div class="option entertainment">Entertainment</div>
+						<div class="option information">Information</div>
+						<div class="option sensor">Sensors</div>
+					</div>
+				</div>
+			</div>
+			<div class="homeScreenContainer">
+				<div class="heading">Web Components</div>
+				<weather-component
+					city="Gurgaon"
+					temperature="20"
+				></weather-component>
+			</div>
+		</div>
 
-		<div class="heading">Web Components</div>
-		<weather-component></weather-component>
 		<script>
 			fetch("widgets/weather/weather.template.js")
 				.then(res => res.blob())
 				.then(data => {
 					console.log("data", data);
 				});
+			const { ipcRenderer } = require("electron");
+			// Synchronous message emmiter and handler
+			console.log(
+				ipcRenderer.sendSync("synchronous-message", "sync ping")
+			);
+
+			setTimeout(() => {
+				ipcRenderer.on("asynchronous-reply", (event, arg) => {
+					console.log(arg);
+				});
+			}, 7000);
+			// Async message handler
+
+			// Async message sender
+			ipcRenderer.send("asynchronous-message", "async ping");
 		</script>
 	</body>
 </html>
