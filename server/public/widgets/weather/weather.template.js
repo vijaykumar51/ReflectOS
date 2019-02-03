@@ -70,7 +70,7 @@ weatherTemplate.innerHTML = `
 				display: block;
 			}
 		</style>
-		<div>
+		<div id="weatherTemplate">
 			<div>Weather: <span id="cityName"><span></div>
 			<div>temperature: <span id="temperature"><span></div>
 		</div>
