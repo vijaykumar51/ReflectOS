@@ -1,5 +1,8 @@
 require("module-alias/register");
+var fs = require("fs");
 var express = require("express");
+
+var htmlUtls = require("./api/utils/html-utils");
 var routes = require("@widgets/weather/weather.route");
 var configService = require("./api/core/config.service");
 
@@ -11,14 +14,16 @@ app.use(express.static(__dirname + "/public"));
 app.use("/", routes);
 
 app.get("/", (req, res) => {
-	res.sendFile(__dirname + "/index.html");
+	let homeWidgets = configService.getHomeWidgets();
+	let indexFile = htmlUtls.getIndexFile(homeWidgets);
+	res.type("html");
+	res.send(indexFile);
 });
 
 app.get("/config", (req, res) => {
 	let data = configService.getConfig().then(data => {
 		res.json(data);
 	});
-	// console.log(data);
 });
 
 app.listen(port, () => {

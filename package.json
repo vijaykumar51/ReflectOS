@@ -26,7 +26,8 @@
 	"homepage": "https://github.com/vijaykumar51/ReflectOS#readme",
 	"_moduleAliases": {
 		"@tokens": "./server/credentials/tokens.json",
-		"@widgets": "./server/api/widgets/"
+		"@widgets": "./server/api/widgets/",
+		"@serverRoot": "./server/"
 	},
 	"dependencies": {
 		"@angular/animations": "~7.2.0",

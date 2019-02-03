@@ -1,6 +1,10 @@
 {
 	"weather": {
-		"default": true,
+		"displayInTab": true,
+		"displayOnHome": true
+	},
+	"time": {
+		"displayInTab": true,
 		"displayOnHome": true
 	}
 }
