@@ -11,12 +11,10 @@ class WeatherComponent extends HTMLElement {
 	}
 
 	get city() {
-		// console.log("returning complete");
 		return this.getAttribute("city");
 	}
 
 	set city(val) {
-		console.log("setting city", val);
 		this.setAttribute("city", val);
 	}
 
@@ -34,21 +32,20 @@ class WeatherComponent extends HTMLElement {
 
 	attributeChangedCallback(name, oldVal, newVal) {
 		console.log(`${name} changed to ${newVal}`);
-		// var innerBar = this.shadowRoot.querySelector("#cityName");
 		switch (name) {
 			case "city":
 				this.citySelector.innerHTML = newVal;
 				break;
 			case "temperature":
 				this.temperatureSelector.innerHTML = newVal;
+				break;
 		}
 	}
 
 	connectedCallback() {
-		setTimeout(() => {
-			this.setAttribute("city", "jind");
-			this.setAttribute("temperature", 10);
-		}, 2000);
+		console.log(this.city);
+		console.log(this.temperature);
+
 		// fetch("/api/weather")
 		// 	.then(response => response.json())
 		// 	.then(data => {

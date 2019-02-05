@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 	res.send(indexFile);
 });
 
-app.get("/config", (req, res) => {
+app.get("/api/config", (req, res) => {
 	let data = configService.getConfig().then(data => {
 		res.json(data);
 	});

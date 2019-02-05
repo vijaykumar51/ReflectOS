@@ -22,22 +22,39 @@
 					</div>
 				</div>
 			</div>
-			<div class="homeScreenContainer">
-				<div class="heading">Web Components</div>
-				<weather-component
-					city="Gurgaon"
-					temperature="20"
-				></weather-component>
-				<time-component></time-component>
-			</div>
+			<div id="homeScreenContainer" class="homeScreenContainer"></div>
 		</div>
 
 		<script>
-			// fetch("widgets/weather/weather.template.js")
-			// 	.then(res => res.blob())
-			// 	.then(data => {
-			// 		console.log("data", data);
-			// 	});
+			fetch("/api/config")
+				.then(data => data.json())
+				.then(data => {
+					console.log(data);
+					let homeScreen = document.getElementById(
+						"homeScreenContainer"
+					);
+					var weatherComponent = document.createElement(
+						"weather-component"
+					);
+
+					weatherComponent.setAttribute("id", "weatherComponent");
+					Object.keys(data.widgets.weather.widgetConfig).forEach(
+						configKey => {
+							weatherComponent.setAttribute(
+								configKey,
+								data.widgets.weather.widgetConfig[configKey]
+							);
+						}
+					);
+					console.log(weatherComponent);
+					homeScreen.innerHTML = `
+						${weatherComponent.outerHTML}
+						<time-component></time-component>
+					`;
+				});
+		</script>
+
+		<script>
 			const { ipcRenderer } = require("electron");
 			// Synchronous message emmiter and handler
 			console.log(
