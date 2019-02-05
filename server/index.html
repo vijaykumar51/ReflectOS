@@ -4,72 +4,77 @@
 		<title>Web Components</title>
 
 		<link href="css/styles.css" rel="stylesheet" />
-		<link
-			href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,600i,700,800"
-			rel="stylesheet"
-		/>
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,600i,700,800" rel="stylesheet" />
+		<script type="text/javascript" src="js/thirdparty/jquery-3.3.1.js"></script>
 	</head>
 	<body>
+		<!-- js files for components will be injected here. don't change below line -->
 		<div id="componentTemplates">[[@componentScriptUrls]]</div>
-		<div class="topContainer">
-			<div class="tabContainer">
-				<div class="tabOptionContainer">
-					<div class="tabOptions">
-						<div class="option home">Home</div>
-						<div class="option entertainment">Entertainment</div>
-						<div class="option information">Information</div>
-						<div class="option sensor">Sensors</div>
+		<div class="top-container">
+			<div class="tab-container">
+				<div class="tab-option-container">
+					<div class="tab-options">
+						<div id="homeTab" class="tab-option home">Home</div>
+						<div id="entertainmentTab" class="tab-option entertainment">Entertainment</div>
+						<div id="informationTab" class="tab-option information">Information</div>
+						<div id="sensorTab" class="tab-option sensor">Sensors</div>
 					</div>
 				</div>
 			</div>
-			<div id="homeScreenContainer" class="homeScreenContainer"></div>
+			<div id="homeScreenContainer" class="home-screen-container screen active"></div>
+			<div id="informationScreenContainer" class="information-screen-container screen"></div>
 		</div>
 
 		<script>
 			fetch("/api/config")
-				.then(data => data.json())
-				.then(data => {
+				.then((data) => data.json())
+				.then((data) => {
 					console.log(data);
-					let homeScreen = document.getElementById(
-						"homeScreenContainer"
-					);
-					var weatherComponent = document.createElement(
-						"weather-component"
-					);
 
-					weatherComponent.setAttribute("id", "weatherComponent");
-					Object.keys(data.widgets.weather.widgetConfig).forEach(
-						configKey => {
-							weatherComponent.setAttribute(
-								configKey,
-								data.widgets.weather.widgetConfig[configKey]
-							);
-						}
-					);
-					console.log(weatherComponent);
-					homeScreen.innerHTML = `
-						${weatherComponent.outerHTML}
-						<time-component></time-component>
-					`;
+					Object.keys(data.tabInfo).forEach((tab) => {
+						let screenContainerInnerHtml = "";
+						let componentList = data.tabInfo[tab];
+						componentList.forEach((component) => {
+							let componentElement = document.createElement(`${component}-component`);
+							componentElement.setAttribute("id", `${component}Component`);
+							let componentConfig = data.widgets[component].widgetConfig;
+							// assign the config to web component as attributes
+							Object.keys(componentConfig).forEach((configKey) => {
+								componentElement.setAttribute(configKey, componentConfig[configKey]);
+							});
+							screenContainerInnerHtml += componentElement.outerHTML;
+						});
+
+						let tabScreenContainer = document.getElementById(`${tab}ScreenContainer`);
+						tabScreenContainer.innerHTML = screenContainerInnerHtml;
+					});
 				});
+
+			// adding event listener on tabs to show the corresponding screen
+			$(".tab-option").on("click", (event) => {
+				let clickedTab = event.currentTarget.getAttribute("id").replace("Tab", "");
+				let screenToBeShown = `#${clickedTab}ScreenContainer`;
+				$(screenToBeShown).addClass("active");
+				$(screenToBeShown)
+					.siblings()
+					.removeClass("active");
+			});
 		</script>
 
 		<script>
-			const { ipcRenderer } = require("electron");
-			// Synchronous message emmiter and handler
-			console.log(
-				ipcRenderer.sendSync("synchronous-message", "sync ping")
-			);
+			// const { ipcRenderer } = require("electron");
+			// // Synchronous message emmiter and handler
+			// console.log(ipcRenderer.sendSync("synchronous-message", "sync ping"));
 
-			setTimeout(() => {
-				ipcRenderer.on("asynchronous-reply", (event, arg) => {
-					console.log(arg);
-				});
-			}, 7000);
-			// Async message handler
+			// setTimeout(() => {
+			// 	ipcRenderer.on("asynchronous-reply", (event, arg) => {
+			// 		console.log(arg);
+			// 	});
+			// }, 7000);
+			// // Async message handler
 
-			// Async message sender
-			ipcRenderer.send("asynchronous-message", "async ping");
+			// // Async message sender
+			// ipcRenderer.send("asynchronous-message", "async ping");
 		</script>
 	</body>
 </html>

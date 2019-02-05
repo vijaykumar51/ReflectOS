@@ -11,26 +11,34 @@ body {
 	font-size: 30px;
 }
 
-.tabContainer {
+.tab-container {
 	background: transparent;
 	border-bottom: 2px solid #ffc;
 	box-shadow: 2px 2px 6px rgb(175, 175, 149);
 }
 
-.tabOptions {
+.tab-options {
 	display: flex;
 }
 
-.tabOptions .option {
+.tab-options .tab-option {
 	border-right: 2px solid #ffc;
 	cursor: pointer;
 	font-size: 20px;
 	padding: 10px 30px;
 }
 
-.tabOptions .option:hover {
+.tab-options .tab-option:hover {
 	color: #013243;
 	opacity: 0.7;
 	/* background: rgb(218, 218, 158); */
 	background: #f0f0d6;
+}
+
+.top-container .screen {
+	display: none;
+}
+
+.top-container .screen.active {
+	display: block;
 }

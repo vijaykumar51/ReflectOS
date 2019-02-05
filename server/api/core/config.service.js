@@ -17,24 +17,30 @@ getConfigJson = () => {
 	}
 	let response = {};
 	response["widgets"] = {};
+	response["tabInfo"] = {};
 
 	// read widget parent config
-	let widgetGlobalConfig = fs.readFileSync(
-		path.resolve(WIDGET_DIR, WIDGET_CONFIG),
-		"utf-8"
-	);
+	let widgetGlobalConfig = fs.readFileSync(path.resolve(WIDGET_DIR, WIDGET_CONFIG), "utf-8");
 
 	// read individual widget config file
 	let configFiles = glob.sync("**/config.json", { cwd: WIDGET_DIR });
-	configFiles.forEach(file => {
-		let widgetConfig = JSON.parse(
-			fs.readFileSync(path.resolve(WIDGET_DIR, file), "utf-8")
-		);
+	configFiles.forEach((file) => {
+		let widgetConfig = JSON.parse(fs.readFileSync(path.resolve(WIDGET_DIR, file), "utf-8"));
 		response["widgets"][widgetConfig.widgetName] = widgetConfig;
+		let widgetType = widgetConfig.widgetType;
+
+		// populate the tabs and the widgets that will be shown on those tabs
+		if (!response["tabInfo"][widgetType]) {
+			response["tabInfo"][widgetType] = [];
+		}
+		response["tabInfo"][widgetType].push(widgetConfig.widgetName);
 	});
 
 	response["widgetsParentConfig"] = JSON.parse(widgetGlobalConfig);
 	response["files"] = configFiles;
+
+	//TODO: make this info dynamic. hardcoding for now
+	response["tabInfo"]["home"] = ["time"];
 
 	configJson = response;
 	return response;
@@ -46,7 +52,7 @@ getConfigJson = () => {
 exports.getHomeWidgets = () => {
 	let parentConfig = getConfigJson()["widgetsParentConfig"];
 	let homeWidgets = [];
-	Object.keys(parentConfig).forEach(widgetName => {
+	Object.keys(parentConfig).forEach((widgetName) => {
 		if (parentConfig[widgetName]["displayOnHome"]) {
 			homeWidgets.push(widgetName);
 		}
@@ -54,6 +60,6 @@ exports.getHomeWidgets = () => {
 	return homeWidgets;
 };
 
-getWidgetsByTabName = tabName => {};
+getTabInformation = () => {};
 
 getWidgetConfig = () => {};

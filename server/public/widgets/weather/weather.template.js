@@ -5,9 +5,7 @@ class WeatherComponent extends HTMLElement {
 		this.attachShadow({ mode: "open" });
 		this.shadowRoot.appendChild(weatherTemplate.content.cloneNode(true));
 		this.citySelector = this.shadowRoot.querySelector("#cityName");
-		this.temperatureSelector = this.shadowRoot.querySelector(
-			"#temperature"
-		);
+		this.temperatureSelector = this.shadowRoot.querySelector("#temperature");
 	}
 
 	get city() {

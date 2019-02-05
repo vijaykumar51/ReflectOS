@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/config", (req, res) => {
-	let data = configService.getConfig().then(data => {
+	let data = configService.getConfig().then((data) => {
 		res.json(data);
 	});
 });
