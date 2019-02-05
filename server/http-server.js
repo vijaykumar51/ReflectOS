@@ -14,7 +14,7 @@ app.use(express.static(__dirname + "/public"));
 app.use("/", routes);
 
 app.get("/", (req, res) => {
-	let homeWidgets = configService.getHomeWidgets();
+	let homeWidgets = configService.getAllWidgetNames();
 	let indexFile = htmlUtls.getIndexFile(homeWidgets);
 	res.type("html");
 	res.send(indexFile);
