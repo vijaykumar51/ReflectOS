@@ -5,6 +5,12 @@
 
 		<link href="css/styles.css" rel="stylesheet" />
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,600i,700,800" rel="stylesheet" />
+		<link
+			rel="stylesheet"
+			href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+			integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+			crossorigin="anonymous"
+		/>
 		<script type="text/javascript" src="js/thirdparty/jquery-3.3.1.js"></script>
 	</head>
 	<body>
@@ -14,14 +20,20 @@
 			<div class="tab-container">
 				<div class="tab-option-container">
 					<div class="tab-options">
-						<div id="homeTab" class="tab-option home">Home</div>
-						<div id="entertainmentTab" class="tab-option entertainment">Entertainment</div>
-						<div id="informationTab" class="tab-option information">Information</div>
-						<div id="sensorTab" class="tab-option sensor">Sensors</div>
+						<div id="homeTab" class="tab-option home active-tab"><i class="fas fa-home"></i></div>
+						<div id="entertainmentTab" class="tab-option entertainment">
+							Entertainment <i class="fas fa-music"></i>
+						</div>
+						<div id="informationTab" class="tab-option information">
+							Information <i class="far fa-newspaper"></i>
+						</div>
+						<div id="sensorTab" class="tab-option sensor">
+							Sensors <i class="fas fa-satellite-dish"></i>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div id="homeScreenContainer" class="home-screen-container screen active"></div>
+			<div id="homeScreenContainer" class="home-screen-container screen active-screen"></div>
 			<div id="informationScreenContainer" class="information-screen-container screen"></div>
 		</div>
 
@@ -52,12 +64,17 @@
 
 			// adding event listener on tabs to show the corresponding screen
 			$(".tab-option").on("click", (event) => {
+				$(event.currentTarget).addClass("active-tab");
+				$(event.currentTarget)
+					.siblings()
+					.removeClass("active-tab");
+
 				let clickedTab = event.currentTarget.getAttribute("id").replace("Tab", "");
 				let screenToBeShown = `#${clickedTab}ScreenContainer`;
-				$(screenToBeShown).addClass("active");
+				$(screenToBeShown).addClass("active-screen");
 				$(screenToBeShown)
 					.siblings()
-					.removeClass("active");
+					.removeClass("active-screen");
 			});
 		</script>
 

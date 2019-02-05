@@ -28,17 +28,27 @@ body {
 	padding: 10px 30px;
 }
 
+.tab-options .tab-option .fas,
+.tab-options .tab-option .far {
+	font-size: 28px;
+}
+
 .tab-options .tab-option:hover {
-	color: #013243;
-	opacity: 0.7;
-	/* background: rgb(218, 218, 158); */
 	background: #f0f0d6;
+	color: #013243;
+	opacity: 0.6;
 }
 
 .top-container .screen {
 	display: none;
 }
 
-.top-container .screen.active {
+.top-container .screen.active-screen {
 	display: block;
+}
+
+.top-container .tab-option.active-tab {
+	background: #f0f0d6;
+	color: #013243;
+	opacity: 0.8;
 }
