@@ -5,11 +5,12 @@
 	"clientApiUrl": "api/weather",
 	"apiProvider": "openWeather",
 	"widgetConfig": {
-		"city": "jind",
+		"city": "gurugram",
 		"countryCode": "in",
 		"units": "metric",
 		"refreshFrequency": 600,
 		"resizable": true,
-		"dragable": true
+		"dragable": true,
+		"endpoint": "/api/weather"
 	}
 }

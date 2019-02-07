@@ -35,7 +35,7 @@ class WeatherComponent extends HTMLElement {
 				this.citySelector.innerHTML = newVal;
 				break;
 			case "temperature":
-				this.temperatureSelector.innerHTML = newVal;
+				this.temperatureSelector.innerHTML = `${newVal}`;
 				break;
 		}
 	}
@@ -43,10 +43,11 @@ class WeatherComponent extends HTMLElement {
 	connectedCallback() {
 		console.log(this.city);
 		console.log(this.temperature);
+		this.setAttribute("temperature", 24);
 
-		// fetch("/api/weather")
-		// 	.then(response => response.json())
-		// 	.then(data => {
+		// fetch(this.getAttribute("endpoint"))
+		// 	.then((response) => response.json())
+		// 	.then((data) => {
 		// 		console.log(data);
 		// 		console.log(data.name);
 		// 		console.log(data.main.temp);
@@ -60,13 +61,41 @@ window.customElements.define("weather-component", WeatherComponent);
 
 var weatherTemplate = document.createElement("template");
 weatherTemplate.innerHTML = `
+		<link rel="stylesheet" href="css/weather-icons.min.css" />	
 		<style>
 			:host {
-				display: block;
+				display: inline-block;
+				padding: 10px;
+				font-size: 100px;
+			}
+			#weatherTemplate #cityName {
+				text-transform: capitalize;
+				font-size: 50%;
+				padding-bottom: 10%;
+			}
+			#weatherTemplate #temperature {
+				font-size: 70%;
+				font-weight: bold;
+				position: relative;
+				top: -20%;
+			}
+			#weatherTemplate #weatherIcon {
+				font-size: 80%;
+				position: relative;
+				left: 10%;
+			}
+			#weatherTemplate #temperatureUnit {
+				position: relative;
+				top: -33%;
+				font-size: 30%;
 			}
 		</style>
 		<div id="weatherTemplate">
-			<div>Weather: <span id="cityName"><span></div>
-			<div>temperature: <span id="temperature"><span></div>
+			<div><span id="cityName"><span></div>
+			<div style="height: 100px;">
+				<span id="temperature"></span>
+				<span id="temperatureUnit"><sup>o</sup>C</span>
+				<i id="weatherIcon" class="wi wi-storm-showers"></i>
+			</div>
 		</div>
 	  `;
