@@ -1,7 +1,8 @@
 {
 	"widgetName": "weather",
 	"widgetType": "information",
-	"apiUrl": "https://api.openweathermap.org/data/2.5/weather",
+	"currentWeatherApiUrl": "https://api.openweathermap.org/data/2.5/weather",
+	"forecastApiUrl": "https://api.openweathermap.org/data/2.5/forecast",
 	"clientApiUrl": "api/weather",
 	"apiProvider": "openWeather",
 	"widgetConfig": {
@@ -11,6 +12,7 @@
 		"refreshFrequency": 600,
 		"resizable": true,
 		"dragable": true,
-		"endpoint": "/api/weather"
+		"currentWeatherEndpoint": "/api/current-weather",
+		"forecastEndpoint": "/api/weather-forecast"
 	}
 }
