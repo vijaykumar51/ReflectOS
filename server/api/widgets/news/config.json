@@ -16,13 +16,13 @@
 				"queryString": "sources=google-news-in"
 			},
 			{
-				"id": "hackerNews",
-				"Label": "Hacker News",
-				"queryString": "sources=hacker-news"
+				"id": "theNextWebNews",
+				"Label": "The Next Web",
+				"queryString": "sources=the-next-web"
 			}
 		],
 		"refreshFrequency": 3000,
 		"dragable": true,
-		"newEndpoint": "/api/news"
+		"newsApiEndpoint": "/api/news"
 	}
 }

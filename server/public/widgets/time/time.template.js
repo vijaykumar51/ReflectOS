@@ -9,10 +9,13 @@ class TimeComponent extends HTMLElement {
 	}
 
 	connectedCallback() {
-		setInterval(() => {
-			this.timeSelector.innerHTML = moment().format("LT");
-			this.dateSelector.innerHTML = moment().format("MMMM Do YYYY");
-		}, 1000);
+		this.updateTime();
+		setInterval(this.updateTime.bind(this), 1000);
+	}
+
+	updateTime() {
+		this.timeSelector.innerHTML = moment().format("LT");
+		this.dateSelector.innerHTML = moment().format("MMMM Do YYYY");
 	}
 }
 
