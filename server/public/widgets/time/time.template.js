@@ -23,15 +23,20 @@ timeTemplate.innerHTML = `
 	<style>
 		:host {
 			display: inline-block;
-			text-shadow: 2px 2px 2px #000;
+			padding: 20px;
+			text-shadow: 2px 2px 2px #333;
 		}
-
 		#timeTemplate #time {
 			font-size: 80px;
+			line-height: 80px;
+			text-shadow: 2px 2px 2px #000;
+		}
+		#timeTemplate #date {
+			font-size: 30px;
 		}
 	</style>
 	<div id="timeTemplate">
+		<div id="date"></div>	
 		<div id="time"></div>
-		<div id="date"></div>
 	</div>
 `;

@@ -18,6 +18,7 @@ body {
 	padding: 0;
 	margin: 0;
 }
+
 .heading {
 	font-weight: 600;
 	font-size: 30px;
@@ -59,10 +60,15 @@ body {
 .top-container .screen.active-screen {
 	display: flex;
 	justify-content: space-evenly;
+	padding-top: 20px;
 }
 
 .top-container .tab-option.active-tab {
 	background: #f0f0d6;
 	color: #013243;
 	opacity: 0.8;
+}
+
+.custom-comp {
+	background-color: rgba(240, 240, 214, 0.3);
 }

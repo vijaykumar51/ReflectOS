@@ -48,10 +48,15 @@
 						componentList.forEach((component) => {
 							let componentElement = document.createElement(`${component}-component`);
 							componentElement.setAttribute("id", `${component}Component`);
+							componentElement.setAttribute("class", "custom-comp");
 							let componentConfig = data.widgets[component].widgetConfig;
 							// assign the config to web component as attributes
 							Object.keys(componentConfig).forEach((configKey) => {
-								componentElement.setAttribute(configKey, componentConfig[configKey]);
+								let attributeValue =
+									typeof componentConfig[configKey] === "object"
+										? JSON.stringify(componentConfig[configKey])
+										: componentConfig[configKey];
+								componentElement.setAttribute(configKey, attributeValue);
 							});
 							screenContainerInnerHtml += componentElement.outerHTML;
 						});

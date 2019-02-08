@@ -56,12 +56,13 @@ weatherTemplate.innerHTML = `
 		<style>
 			:host {
 				display: inline-block;
-				padding: 10px;
+				padding: 20px;
 				text-shadow: 2px 2px 6px #333;
 			}
 			#weatherTemplate #cityName {
 				text-transform: capitalize;
 				font-size: 50px;
+				line-height: 50px;
 				padding-bottom: 10px;
 				text-shadow: 2px 2px 6px #000;
 			}

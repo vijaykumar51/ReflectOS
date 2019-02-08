@@ -1,0 +1,28 @@
+{
+	"widgetName": "news",
+	"widgetType": "information",
+	"topHeadlinesApiUrl": "https://newsapi.org/v2/top-headlines",
+	"apiProvider": "newsapi",
+	"widgetConfig": {
+		"tabs": [
+			{
+				"id": "bbcNews",
+				"Label": "BBC News",
+				"queryString": "sources=bbc-news"
+			},
+			{
+				"id": "googleIndiaNews",
+				"Label": "Google News India",
+				"queryString": "sources=google-news-in"
+			},
+			{
+				"id": "hackerNews",
+				"Label": "Hacker News",
+				"queryString": "sources=hacker-news"
+			}
+		],
+		"refreshFrequency": 3000,
+		"dragable": true,
+		"newEndpoint": "/api/news"
+	}
+}

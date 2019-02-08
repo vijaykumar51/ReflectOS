@@ -6,5 +6,9 @@
 	"time": {
 		"displayInTab": true,
 		"displayOnHome": true
+	},
+	"news": {
+		"displayInTab": true,
+		"displayOnHome": true
 	}
 }
