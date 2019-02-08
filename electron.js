@@ -6,7 +6,7 @@ var mainWindow;
 
 function createMainWindow() {
 	mainWindow = new BrowserWindow(mainWindowConfig);
-	mainWindow.loadURL(`http://localhost:9090`);
+	mainWindow.loadURL("http://localhost:9090");
 
 	mainWindow.on("closed", () => {
 		mainWindow = null;

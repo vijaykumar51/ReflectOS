@@ -11,7 +11,7 @@ exports.getConfig = async () => {
 	return getConfigJson();
 };
 
-getConfigJson = () => {
+function getConfigJson() {
 	if (configJson) {
 		return configJson;
 	}
@@ -50,7 +50,7 @@ getConfigJson = () => {
 
 	configJson = response;
 	return response;
-};
+}
 
 /**
  * Return all widgets available in all tabs
@@ -65,7 +65,3 @@ exports.getAllWidgetNames = () => {
 	});
 	return Array.from(widgets);
 };
-
-getTabInformation = () => {};
-
-getWidgetConfig = () => {};

@@ -21,8 +21,12 @@ class NewsComponent extends HTMLElement {
 		let newsTabs = this.shadowRoot.querySelectorAll(".news-tab");
 		newsTabs.forEach((newsTab) => {
 			newsTab.addEventListener("click", (event) => {
+				let oldSelectedTab = this.shadowRoot.querySelector(".news-tab.active");
+				oldSelectedTab.classList.remove("active");
 				//using path to get the clicked element inside shadow root
 				let selectedSource = event.path[0];
+				selectedSource.classList.add("active");
+
 				let apiQuerySting = selectedSource.getAttribute("querystring");
 				this.getNews(apiQuerySting);
 			});
