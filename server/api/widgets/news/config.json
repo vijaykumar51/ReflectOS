@@ -21,6 +21,7 @@
 				"queryString": "sources=the-next-web"
 			}
 		],
+		"pageSize": "6",
 		"refreshFrequency": 3000,
 		"dragable": true,
 		"newsApiEndpoint": "/api/news"

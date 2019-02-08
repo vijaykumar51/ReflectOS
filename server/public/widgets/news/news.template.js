@@ -5,10 +5,33 @@ class NewsComponent extends HTMLElement {
 		this.attachShadow({ mode: "open" });
 		this.shadowRoot.appendChild(newsTemplate.content.cloneNode(true));
 		this.newsBodySelector = this.shadowRoot.querySelector("#newsBodyContainer");
+		this.newsTabsSelector = this.shadowRoot.querySelector(".news-tabs");
+		this.tabSelector = this.shadowRoot.querySelector(".news-tab");
 	}
 
 	connectedCallback() {
-		fetch(this.getAttribute("newsApiEndpoint"))
+		this.prepareNewsTabs();
+		this.registerClickListeners();
+
+		let apiQueryString = this.shadowRoot.querySelector(".news-tab.active").getAttribute("queryString");
+		this.getNews(apiQueryString);
+	}
+
+	registerClickListeners() {
+		let newsTabs = this.shadowRoot.querySelectorAll(".news-tab");
+		newsTabs.forEach((newsTab) => {
+			newsTab.addEventListener("click", (event) => {
+				//using path to get the clicked element inside shadow root
+				let selectedSource = event.path[0];
+				let apiQuerySting = selectedSource.getAttribute("querystring");
+				this.getNews(apiQuerySting);
+			});
+		});
+	}
+
+	// get news based on selected source
+	getNews(queryString) {
+		fetch(`${this.getAttribute("newsApiEndpoint")}?${queryString}`)
 			.then((data) => data.json())
 			.then((data) => {
 				let articles = data.articles;
@@ -21,6 +44,20 @@ class NewsComponent extends HTMLElement {
 				});
 				this.newsBodySelector.innerHTML = articlesHtml;
 			});
+	}
+
+	// prepare html for tabs based on config
+	prepareNewsTabs() {
+		let tabsInfo = JSON.parse(this.getAttribute("tabs"));
+		let tabsHtml = "";
+		tabsInfo.forEach((tabInfo, index) => {
+			let tabHtml = `<div id="${tabInfo.id}" 
+					class="news-tab ${index === 0 ? "active" : ""}" 
+					querystring=${tabInfo.queryString}>
+				${tabInfo.Label}</div>`;
+			tabsHtml += tabHtml;
+		});
+		this.newsTabsSelector.innerHTML = tabsHtml;
 	}
 }
 
@@ -72,6 +109,10 @@ newsTemplate.innerHTML = `
 			cursor: pointer;
 			opacity: 0.6;
 		}
+		#newsContainer #newsBodyContainer {
+			max-height: 180px;
+    		overflow: auto;
+		}
 		#newsContainer #newsBodyContainer .news-heading {
 			margin: 4px 0;
 		}
@@ -88,21 +129,9 @@ newsTemplate.innerHTML = `
 	<div id="newsContainer">
 		<div id="newsTabsContainer">
 			<div class="news-tabs">
-				<div class="news-tab active">Hacker News</div>
-				<div class="news-tab">Google India News</div>
-				<div class="news-tab">BBC News</div>
 			</div>
 		</div>
 		<div id="newsBodyContainer">
-			<div class="news-heading">
-				<span class="news-icon"></span>This is news heading 1. Hope you are enjoying the news.
-			</div>
-			<div class="news-heading">
-				<span class="news-icon"></span>This is news heading 1. Hope you are enjoying the news.
-			</div>
-			<div class="news-heading">
-				<span class="news-icon"></span>This is news heading 1. Hope you are enjoying the news.
-			</div>
 		</div>
 	</div>
 	
