@@ -12,48 +12,16 @@ class WeatherComponent extends HTMLElement {
 		this.windDirectionSelector = this.shadowRoot.querySelector(".wind-direction");
 	}
 
-	get city() {
-		return this.getAttribute("city");
-	}
-
-	set city(val) {
-		this.setAttribute("city", val);
-	}
-
-	get temperature() {
-		this.getAttribute("temperature");
-	}
-
-	set temperature(temp) {
-		this.setAttribute("temperature", temp);
-	}
-
-	static get observedAttributes() {
-		return ["city", "temperature"];
-	}
-
-	attributeChangedCallback(name, oldVal, newVal) {
-		switch (name) {
-			case "city":
-				this.citySelector.innerHTML = newVal;
-				break;
-			case "temperature":
-				this.temperatureSelector.innerHTML = `${newVal}`;
-				break;
-		}
-	}
-
 	connectedCallback() {
 		fetch(this.getAttribute("currentweatherendpoint"))
 			.then((response) => response.json())
 			.then((data) => {
-				console.log(data);
-				this.setAttribute("city", data.name);
-				this.setAttribute("temperature", data.main.temp);
+				this.citySelector.innerHTML = data.name;
+				this.temperatureSelector.innerHTML = data.main.temp;
 
 				let iconClass = this.getWeatherIconClass(data.weather[0].main);
 				this.currentWeatherIconSelector.classList.add(iconClass);
-				this.currentWeatherLabelSelector.innerHTML = data.weather[0].main;
+				this.currentWeatherLabelSelector.innerHTML = data.weather[0].description;
 				this.windSpeedSelector.innerHTML = data.wind.speed;
 
 				let windDirectionClass = this.getWindDirectionClass(data.wind.deg);
@@ -117,7 +85,8 @@ weatherTemplate.innerHTML = `
 			#weatherTemplate #weatherDescriptionSection {
 				display: flex;
     			align-items: center;
-    			justify-content: space-evenly;
+				justify-content: space-evenly;
+				text-transform: capitalize;
 			}
 			#weatherTemplate #weatherDescriptionSection .wind-direction {
 				font-size: 35px;

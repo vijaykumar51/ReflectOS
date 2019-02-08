@@ -26,7 +26,8 @@ body {
 .tab-container {
 	background: transparent;
 	border-bottom: 2px solid #ffc;
-	box-shadow: 2px 2px 6px rgb(175, 175, 149);
+	/* box-shadow: 2px 2px 6px rgb(175, 175, 149); */
+	box-shadow: 0px 2px 20px #333;
 }
 
 .tab-options {
@@ -56,7 +57,8 @@ body {
 }
 
 .top-container .screen.active-screen {
-	display: block;
+	display: flex;
+	justify-content: space-evenly;
 }
 
 .top-container .tab-option.active-tab {

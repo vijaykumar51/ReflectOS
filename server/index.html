@@ -12,6 +12,7 @@
 			crossorigin="anonymous"
 		/>
 		<script type="text/javascript" src="js/thirdparty/jquery-3.3.1.js"></script>
+		<script type="text/javascript" src="js/thirdparty/moment.js"></script>
 	</head>
 	<body>
 		<!-- js files for components will be injected here. don't change below line -->
@@ -41,8 +42,6 @@
 			fetch("/api/config")
 				.then((data) => data.json())
 				.then((data) => {
-					console.log(data);
-
 					Object.keys(data.tabInfo).forEach((tab) => {
 						let screenContainerInnerHtml = "";
 						let componentList = data.tabInfo[tab];

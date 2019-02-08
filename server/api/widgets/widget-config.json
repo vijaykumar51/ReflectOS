@@ -5,6 +5,6 @@
 	},
 	"time": {
 		"displayInTab": true,
-		"displayOnHome": false
+		"displayOnHome": true
 	}
 }
