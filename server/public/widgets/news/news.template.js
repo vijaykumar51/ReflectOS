@@ -31,6 +31,27 @@ class NewsComponent extends HTMLElement {
 				this.getNews(apiQuerySting);
 			});
 		});
+
+		let newsBodyContainer = this.shadowRoot.querySelector("#newsBodyContainer");
+		newsBodyContainer.addEventListener("click", (event) => {
+			let index = event.path[0].getAttribute("index");
+			if (index >= 0 && this.newsData) {
+				let newsDetails =
+					this.newsData.body && this.newsData.body[index]
+						? this.newsData.body[index]
+						: "Unable to fetch news details";
+				console.log(newsDetails);
+				let newsImageUrl = this.newsData.image && this.newsData.image[index] ? this.newsData.image[index] : "";
+
+				let newsDetailOverlay = this.shadowRoot.querySelector("#newsDetailOverlay");
+				let newsImageSelector = this.shadowRoot.querySelector("#newsImage");
+				let newsDetailSelector = this.shadowRoot.querySelector("#newsDetails");
+
+				newsDetailOverlay.style.display = "flex";
+				newsImageSelector.style.backgroundImage = `url(${newsImageUrl})`;
+				newsDetailSelector.innerHTML = newsDetails;
+			}
+		});
 	}
 
 	// get news based on selected source
@@ -38,10 +59,11 @@ class NewsComponent extends HTMLElement {
 		fetch(`${this.getAttribute("newsApiEndpoint")}?${queryString}`)
 			.then((data) => data.json())
 			.then((data) => {
+				this.newsData = data;
 				let headlines = data.headline;
 				let headlinesHtml = "";
-				headlines.forEach((article) => {
-					let articleHeadingHtml = `<div class="news-heading">
+				headlines.forEach((article, index) => {
+					let articleHeadingHtml = `<div class="news-heading" index=${index}>
 						<span class="news-icon fab fa-readme"></span>${article}
 						</div>`;
 					headlinesHtml += articleHeadingHtml;
@@ -148,6 +170,37 @@ newsTemplate.innerHTML = `
 			font-size: 20px;
 			margin-right: 6px;
 		}
+
+		#newsContainer #newsDetailOverlay {
+			display: none;
+			background-color: rgba(0,0,0, 0.7);
+			height: 100%;
+			position: fixed;
+			top: 0;
+			left: 0;
+			align-items: center;
+    		justify-content: center;
+    		width: 100%;
+		}
+
+		#newsContainer #newsDetailOverlay #newsDetailContainer {
+			height: 500px;
+			width: 400px;
+			background: #efefef;
+		} 
+
+		#newsContainer #newsDetailContainer #newsImage {
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			height: 50%;
+			width: 100%;
+		}
+
+		#newsContainer #newsDetailContainer #newsDetails {
+			color: #000;
+    		padding: 20px;
+    		text-align: justify;
+		}
 	</style>
 	<div id="newsContainer">
 		<div id="newsTabsContainer">
@@ -155,6 +208,16 @@ newsTemplate.innerHTML = `
 			</div>
 		</div>
 		<div id="newsBodyContainer">
+		</div>
+		<div id="newsDetailOverlay">
+			<div id="newsDetailContainer">
+				<div id="newsImage">
+				</div>
+				<div id="newsHeading">
+				</div>
+				<div id="newsDetails">
+				</div>
+			</div>
 		</div>
 	</div>
 	
