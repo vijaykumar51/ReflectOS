@@ -18,7 +18,11 @@ class NewsComponent extends HTMLElement {
 	}
 
 	registerClickListeners() {
+		let newsDetailOverlay = this.shadowRoot.querySelector("#newsDetailOverlay");
+		let newsBodyContainer = this.shadowRoot.querySelector("#newsBodyContainer");
 		let newsTabs = this.shadowRoot.querySelectorAll(".news-tab");
+
+		// fetch news when click on new news category
 		newsTabs.forEach((newsTab) => {
 			newsTab.addEventListener("click", (event) => {
 				let oldSelectedTab = this.shadowRoot.querySelector(".news-tab.active");
@@ -32,7 +36,7 @@ class NewsComponent extends HTMLElement {
 			});
 		});
 
-		let newsBodyContainer = this.shadowRoot.querySelector("#newsBodyContainer");
+		// show overlay on click on news headline
 		newsBodyContainer.addEventListener("click", (event) => {
 			let index = event.path[0].getAttribute("index");
 			if (index >= 0 && this.newsData) {
@@ -42,15 +46,24 @@ class NewsComponent extends HTMLElement {
 						: "Unable to fetch news details";
 				console.log(newsDetails);
 				let newsImageUrl = this.newsData.image && this.newsData.image[index] ? this.newsData.image[index] : "";
+				let newsHeading =
+					this.newsData.headline && this.newsData.headline[index] ? this.newsData.headline[index] : "";
 
-				let newsDetailOverlay = this.shadowRoot.querySelector("#newsDetailOverlay");
 				let newsImageSelector = this.shadowRoot.querySelector("#newsImage");
+				let newsHeadingSelector = this.shadowRoot.querySelector("#newsHeading");
 				let newsDetailSelector = this.shadowRoot.querySelector("#newsDetails");
 
 				newsDetailOverlay.style.display = "flex";
 				newsImageSelector.style.backgroundImage = `url(${newsImageUrl})`;
+				newsHeadingSelector.innerHTML = newsHeading;
 				newsDetailSelector.innerHTML = newsDetails;
 			}
+		});
+
+		// close news overlay
+		let closeNewsOverlaySelector = this.shadowRoot.querySelector("#closeNewsOverlay");
+		closeNewsOverlaySelector.addEventListener("click", (event) => {
+			newsDetailOverlay.style.display = "none";
 		});
 	}
 
@@ -185,21 +198,42 @@ newsTemplate.innerHTML = `
 
 		#newsContainer #newsDetailOverlay #newsDetailContainer {
 			height: 500px;
-			width: 400px;
+			width: 600px;
 			background: #efefef;
+			box-shadow: 0px 0px 15px #666 inset;
+			position: relative;
 		} 
-
 		#newsContainer #newsDetailContainer #newsImage {
 			background-repeat: no-repeat;
 			background-size: 100% 100%;
+			box-shadow: 0px 1px 15px #666;
 			height: 50%;
 			width: 100%;
 		}
-
-		#newsContainer #newsDetailContainer #newsDetails {
+		#newsContainer #newsDetailContainer #newsHeading {
 			color: #000;
-    		padding: 20px;
+			font-size: 24px;
+			padding: 20px 20px 0px 20px;
+			font-weight: bold;
+			text-shadow: 0px 0px 3px #666;
+			text-align: justify;
+		}
+		#newsContainer #newsDetailContainer #newsDetails {
+			color: #333;
+    		padding: 10px 20px;
     		text-align: justify;
+		}
+		#newsContainer #newsDetailContainer #closeNewsOverlay {
+			font-size: 36px;
+			color: #efefef;
+			text-shadow: 2px 2px 7px #333;
+			position: absolute;
+			right: 16px;
+			top: 10px;
+		}
+		#newsContainer #newsDetailContainer #closeNewsOverlay:hover {
+			color: #999;
+			cursor: pointer;
 		}
 	</style>
 	<div id="newsContainer">
@@ -211,6 +245,7 @@ newsTemplate.innerHTML = `
 		</div>
 		<div id="newsDetailOverlay">
 			<div id="newsDetailContainer">
+				<span id="closeNewsOverlay" class="fa fa-times"></span>
 				<div id="newsImage">
 				</div>
 				<div id="newsHeading">
