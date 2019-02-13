@@ -38,15 +38,19 @@ class NewsComponent extends HTMLElement {
 		fetch(`${this.getAttribute("newsApiEndpoint")}?${queryString}`)
 			.then((data) => data.json())
 			.then((data) => {
-				let articles = data.articles;
-				let articlesHtml = "";
-				articles.forEach((article) => {
+				let headlines = data.headline;
+				let headlinesHtml = "";
+				headlines.forEach((article) => {
 					let articleHeadingHtml = `<div class="news-heading">
-						<span class="news-icon fab fa-readme"></span>${article.title}
+						<span class="news-icon fab fa-readme"></span>${article}
 						</div>`;
-					articlesHtml += articleHeadingHtml;
+					headlinesHtml += articleHeadingHtml;
 				});
-				this.newsBodySelector.innerHTML = articlesHtml;
+				this.newsBodySelector.innerHTML = headlinesHtml;
+			})
+			.catch((err) => {
+				console.error(err);
+				this.newsBodySelector.innerHTML = "Unable to fetch news";
 			});
 	}
 
@@ -79,6 +83,21 @@ newsTemplate.innerHTML = `
 		:host {
 			display: inline-block;
 			padding: 20px;
+		}
+		::-webkit-scrollbar { 
+			height: 8px;
+			width: 6px;
+			background: rgba(240, 240, 214, 0.4);
+			border-radius: 1em;
+		}
+		
+		::-webkit-scrollbar-thumb {
+			background: #ffc;
+			-webkit-border-radius: 1ex;
+		}
+		
+		::-webkit-scrollbar-corner {
+			background: #ffc;
 		}
 		#newsContainer {
 			width: 500px;

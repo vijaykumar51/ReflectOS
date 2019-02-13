@@ -1,24 +1,23 @@
 {
 	"widgetName": "news",
 	"widgetType": "information",
-	"topHeadlinesApiUrl": "https://newsapi.org/v2/top-headlines",
-	"apiProvider": "newsapi",
+	"apiProvider": "inshorts",
 	"widgetConfig": {
 		"tabs": [
 			{
-				"id": "bbcNews",
-				"Label": "BBC News",
-				"queryString": "sources=bbc-news"
+				"id": "general",
+				"Label": "General",
+				"queryString": "topic="
 			},
 			{
-				"id": "googleIndiaNews",
-				"Label": "Google News India",
-				"queryString": "sources=google-news-in"
+				"id": "technology",
+				"Label": "Technology",
+				"queryString": "topic=technology"
 			},
 			{
-				"id": "theNextWebNews",
-				"Label": "The Next Web",
-				"queryString": "sources=the-next-web"
+				"id": "startup",
+				"Label": "Startup",
+				"queryString": "topic=startup"
 			}
 		],
 		"pageSize": "6",

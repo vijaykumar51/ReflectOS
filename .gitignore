@@ -46,3 +46,6 @@ Thumbs.db
 
 #token and credentials
 server/credentials
+
+#vscode settings
+.vscode

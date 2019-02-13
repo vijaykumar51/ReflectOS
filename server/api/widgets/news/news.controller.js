@@ -1,18 +1,10 @@
-const request = require("request");
-const tokens = require("@tokens");
-const config = require("./config.json");
+let inshorts = require("./newsParser").init();
 
 exports.getNewsHeadlines = (req, res) => {
-	let token = tokens[config.widgetName];
-	let newsApiUrl = `${config.topHeadlinesApiUrl}?apiKey=${token}&sources=${req.query.sources}&pageSize=${
-		config.widgetConfig.pageSize
-	}`;
-
-	request.get(newsApiUrl, (error, response, body) => {
-		if (error) {
-			console.log(error);
-			res.send(error);
+	inshorts.getNews(req.query.topic, (err, result) => {
+		if (err) {
+			res.send(err);
 		}
-		res.json(JSON.parse(body));
+		res.json(result);
 	});
 };
