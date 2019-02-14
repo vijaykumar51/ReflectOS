@@ -10,5 +10,9 @@
 	"news": {
 		"displayInTab": true,
 		"displayOnHome": false
+	},
+	"youtube": {
+		"displayInTab": true,
+		"displayOnHome": true
 	}
 }
