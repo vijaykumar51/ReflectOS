@@ -1,6 +1,7 @@
 {
 	"widgetName": "weather",
-	"widgetType": "information",
+	"widgetTab": "information",
+	"widgetType": "widget",
 	"currentWeatherApiUrl": "https://api.openweathermap.org/data/2.5/weather",
 	"forecastApiUrl": "https://api.openweathermap.org/data/2.5/forecast",
 	"apiProvider": "openWeather",

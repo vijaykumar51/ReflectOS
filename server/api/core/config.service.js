@@ -27,13 +27,13 @@ function getConfigJson() {
 	configFiles.forEach((file) => {
 		let widgetConfig = JSON.parse(fs.readFileSync(path.resolve(WIDGET_DIR, file), "utf-8"));
 		response["widgets"][widgetConfig.widgetName] = widgetConfig;
-		let widgetType = widgetConfig.widgetType;
+		let widgetTab = widgetConfig.widgetTab;
 
 		// populate the tabs and the widgets that will be shown on those tabs
-		if (!response["tabInfo"][widgetType]) {
-			response["tabInfo"][widgetType] = [];
+		if (!response["tabInfo"][widgetTab]) {
+			response["tabInfo"][widgetTab] = [];
 		}
-		response["tabInfo"][widgetType].push(widgetConfig.widgetName);
+		response["tabInfo"][widgetTab].push(widgetConfig.widgetName);
 	});
 
 	response["widgetsParentConfig"] = JSON.parse(widgetGlobalConfig);

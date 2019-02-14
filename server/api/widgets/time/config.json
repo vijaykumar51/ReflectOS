@@ -1,5 +1,6 @@
 {
 	"widgetName": "time",
-	"widgetType": "information",
+	"widgetTab": "information",
+	"widgetType": "widget",
 	"widgetConfig": {}
 }

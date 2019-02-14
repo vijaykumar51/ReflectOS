@@ -1,6 +1,7 @@
 {
 	"widgetName": "news",
-	"widgetType": "information",
+	"widgetTab": "information",
+	"widgetType": "widget",
 	"apiProvider": "inshorts",
 	"widgetConfig": {
 		"tabs": [

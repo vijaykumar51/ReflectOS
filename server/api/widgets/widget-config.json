@@ -1,14 +1,14 @@
 {
 	"weather": {
-		"displayInTab": true,
+		"displayInTab": false,
 		"displayOnHome": true
 	},
 	"time": {
-		"displayInTab": true,
+		"displayInTab": false,
 		"displayOnHome": true
 	},
 	"news": {
 		"displayInTab": true,
-		"displayOnHome": true
+		"displayOnHome": false
 	}
 }

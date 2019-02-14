@@ -39,7 +39,8 @@ class NewsComponent extends HTMLElement {
 		// show overlay on click on news headline
 		newsBodyContainer.addEventListener("click", (event) => {
 			let index = event.path[0].getAttribute("index");
-			if (index >= 0 && this.newsData) {
+			console.log(index);
+			if (index !== null && index >= 0 && this.newsData) {
 				let newsDetails =
 					this.newsData.body && this.newsData.body[index]
 						? this.newsData.body[index]
@@ -186,7 +187,7 @@ newsTemplate.innerHTML = `
 
 		#newsContainer #newsDetailOverlay {
 			display: none;
-			background-color: rgba(0,0,0, 0.7);
+			background-color: rgba(0,0,0, 0.8);
 			height: 100%;
 			position: fixed;
 			top: 0;
