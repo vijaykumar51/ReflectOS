@@ -5,6 +5,7 @@ var express = require("express");
 var htmlUtls = require("./api/utils/html-utils");
 var weatherRoutes = require("@widgets/weather/weather.route");
 var newsRoutes = require("@widgets/news/news.route");
+var uberRoutes = require("@widgets/uber/uber.route");
 var configService = require("./api/core/config.service");
 
 var app = express();
@@ -14,6 +15,7 @@ app.use(express.static(__dirname + "/public"));
 
 app.use("/", weatherRoutes);
 app.use("/", newsRoutes);
+app.use("/", uberRoutes);
 
 app.get("/", (req, res) => {
 	let homeWidgets = configService.getAllWidgetNames();

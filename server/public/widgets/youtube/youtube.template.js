@@ -73,7 +73,7 @@ youtubeTemplate.innerHTML = `
 			width: 200px;
 		}
 		#youtubeTemplate #youtubeOverlay {
-			display: flex;
+			display: none;
 			background-color: rgba(0,0,0, 0.8);
 			height: 100%;
 			position: fixed;

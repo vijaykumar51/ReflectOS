@@ -1,0 +1,10 @@
+{
+	"widgetName": "uber",
+	"widgetTab": "information",
+	"widgetType": "widget",
+	"priceEstimateApi": "https://api.uber.com/v1.2/estimates/price",
+	"apiProvider": "uber",
+	"widgetConfig": {
+		"price-endpoint": "/api/uber/get-price"
+	}
+}
