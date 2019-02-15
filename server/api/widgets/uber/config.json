@@ -3,8 +3,10 @@
 	"widgetTab": "information",
 	"widgetType": "widget",
 	"priceEstimateApi": "https://api.uber.com/v1.2/estimates/price",
+	"vechicleEtaApi": "https://api.uber.com/v1.2/estimates/time",
 	"apiProvider": "uber",
 	"widgetConfig": {
-		"price-endpoint": "/api/uber/get-price"
+		"price-endpoint": "/api/uber/price",
+		"vehicle-eta-endpoint": "/api/uber/vehicle-eta"
 	}
 }
