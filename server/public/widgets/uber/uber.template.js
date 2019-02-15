@@ -2,9 +2,6 @@ class UberComponent extends HTMLElement {
 	constructor() {
 		super();
 
-		this.allowedVehicles = ["Auto GGN", "Pool", "MOTO", "UberGo"];
-		this.hireGoIncluded = false;
-
 		this.attachShadow({ mode: "open" });
 		this.shadowRoot.appendChild(uberTemplate.content.cloneNode(true));
 		this.distanceSelector = this.shadowRoot.querySelector("#distance");
@@ -15,27 +12,41 @@ class UberComponent extends HTMLElement {
 		fetch(this.getAttribute("price-endpoint"))
 			.then((data) => data.json())
 			.then((data) => {
+				let allowedVehicles = ["Auto GGN", "Pool", "MOTO", "UberGo"];
 				let distanceInKm = (data.prices[0].distance * 1.609).toFixed(2);
-				this.distanceSelector.innerHTML = `Distance: ${distanceInKm} Km`;
+				this.distanceSelector.innerHTML = `Distance: <b>${distanceInKm}</b> Km`;
 
 				let priceFinalHtml = "";
 				data.prices.forEach((priceInfo) => {
-					if (this.allowedVehicles.includes(priceInfo.display_name)) {
-						this.allowedVehicles.splice(this.allowedVehicles.indexOf(priceInfo.display_name), 1);
-						let priceHtml = `<div class="price-container">
+					if (allowedVehicles.includes(priceInfo.display_name)) {
+						allowedVehicles.splice(allowedVehicles.indexOf(priceInfo.display_name), 1);
+						let priceHtml = `<div id=${priceInfo.display_name.replace(" ", "")} class="price-container">
 								<div class="vehicle-type">${priceInfo.display_name}</div>
 								<div class="vehicle-price">${priceInfo.estimate}</div>
+								<div class="vehicle-eta"></div>
 							</div>`;
 						priceFinalHtml += priceHtml;
 					}
 				});
 				this.priceDetailSelector.innerHTML = priceFinalHtml;
+				this.getVehicleEta();
 			});
-		console.log(this.getAttribute("vehicle-eta-endpoint"));
+	}
+
+	getVehicleEta() {
 		fetch(this.getAttribute("vehicle-eta-endpoint"))
 			.then((data) => data.json())
 			.then((data) => {
-				console.log(data);
+				let allowedVehicles = ["Auto GGN", "Pool", "MOTO", "UberGo"];
+				data.times.forEach((timeInfo) => {
+					if (allowedVehicles.includes(timeInfo.display_name)) {
+						allowedVehicles.splice(allowedVehicles.indexOf(timeInfo.display_name), 1);
+						let vehicleEtaElement = this.shadowRoot.querySelector(
+							`#${timeInfo.display_name.replace(" ", "")} .vehicle-eta`
+						);
+						vehicleEtaElement.innerHTML = `${timeInfo.estimate / 60} m`;
+					}
+				});
 			});
 	}
 }
@@ -55,9 +66,6 @@ uberTemplate.innerHTML = `
 			display: inline-block;
 			padding: 20px;
 		}
-		#uberContainer #uberHeader {
-			
-		}
 		#uberContainer .fa-uber {
 			font-size: 50px;
 			text-shadow: 2px 2px 2px #333;
@@ -68,17 +76,21 @@ uberTemplate.innerHTML = `
 			padding: 0px 20px;
 			text-shadow: 2px 2px 2px #333;
 		}
-		#uberContainer #uberDetails {
-			margin-top: 20px;
+		#uberContainer #rideDetailsContainer {
+			margin-top: 10px;
 			width: 330px;
 		}	
 		#uberContainer #priceDetails {
 			display: flex;
 			justify-content: space-between;
-			margin-top: 20px;
+			margin-top: 10px;
 		}
-		#uberContainer #priceDetails .price-container {
-			
+		#uberContainer #priceDetails .vehicle-price {
+			font-weight: 700;
+			font-size: 18px;
+		}
+		#uberContainer #etaDetailsContainer {
+			margin-top: 20px;
 		}
 	</style>
 	<div id="uberContainer">
@@ -86,7 +98,7 @@ uberTemplate.innerHTML = `
 			<span class="fab fa-uber"></span>
 			<span class="uber-label">Uber</span>
 		</div>
-		<div id="uberDetails">
+		<div id="rideDetailsContainer">
 			<div id="distance"></div>
 			<div id="priceDetails"></div>
 		</div>
