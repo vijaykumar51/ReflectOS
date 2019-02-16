@@ -11,6 +11,8 @@
 	"widgetConfig": {
 		"price-endpoint": "/api/uber/price",
 		"vehicle-eta-endpoint": "/api/uber/vehicle-eta",
-		"products-endpoint": "/api/uber/products"
+		"products-endpoint": "/api/uber/products",
+		"estimate-endpoint": "/api/uber/estimates",
+		"allowedVehicles": ["Auto GGN", "Pool", "MOTO", "UberGo"]
 	}
 }

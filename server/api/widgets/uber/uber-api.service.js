@@ -31,5 +31,38 @@ exports.getProducts = async (accessToken) => {
 	};
 
 	let products = await request.get(url, options);
-	return JSON.parse(products);
+	products = JSON.parse(products);
+
+	let filteredProductInfo = [];
+	products["products"].forEach((product) => {
+		if (config.widgetConfig.allowedVehicles.includes(product.display_name)) {
+			filteredProductInfo.push(product);
+		}
+	});
+	return filteredProductInfo;
+};
+
+/**
+ * get detailes of ride for each product Ids
+ */
+exports.getEstimatesForProducts = async (productIds, accessToken) => {
+	let estimateRequests = [];
+	productIds.forEach((productId) => {
+		let url = `${config.requestEstimateApi}`;
+		let options = {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				"Content-Type": "application/json"
+			},
+			json: {
+				start_latitude: tokens.homeLatitude,
+				start_longitude: tokens.homeLongitude,
+				end_latitude: tokens.officeLatitude,
+				end_longitude: tokens.officeLongitude,
+				product_id: productId
+			}
+		};
+		estimateRequests.push(request.post(url, options));
+	});
+	return await Promise.all(estimateRequests);
 };

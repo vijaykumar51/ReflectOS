@@ -51,5 +51,29 @@ exports.getVehicleETA = (req, res) => {
 exports.getProducts = async (req, res) => {
 	let token = await uberApiService.getAccessToken();
 	let products = await uberApiService.getProducts(token);
-	res.json(products);
+
+	res.json(filteredProductInfo);
+};
+
+exports.getEstimates = async (req, res) => {
+	let productIds = [];
+	let productDisplayNames = [];
+	let token = await uberApiService.getAccessToken();
+	if (req.query.productId) {
+		productIds.push(req.query.productId);
+	} else {
+		let products = await uberApiService.getProducts(token);
+
+		products.forEach((product) => {
+			productIds.push(product.product_id);
+			productDisplayNames.push(product.display_name);
+		});
+	}
+
+	let estimates = await uberApiService.getEstimatesForProducts(productIds, token);
+	let finalEstimatedResults = {};
+	productDisplayNames.forEach((displayName, index) => {
+		finalEstimatedResults[displayName] = estimates[index];
+	});
+	res.json(finalEstimatedResults);
 };
