@@ -4,9 +4,13 @@
 	"widgetType": "widget",
 	"priceEstimateApi": "https://api.uber.com/v1.2/estimates/price",
 	"vechicleEtaApi": "https://api.uber.com/v1.2/estimates/time",
+	"tokenApi": "https://login.uber.com/oauth/v2/token",
+	"productApi": "https://api.uber.com/v1.2/products",
+	"requestEstimateApi": "https://api.uber.com/v1.2/requests/estimate",
 	"apiProvider": "uber",
 	"widgetConfig": {
 		"price-endpoint": "/api/uber/price",
-		"vehicle-eta-endpoint": "/api/uber/vehicle-eta"
+		"vehicle-eta-endpoint": "/api/uber/vehicle-eta",
+		"products-endpoint": "/api/uber/products"
 	}
 }

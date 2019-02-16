@@ -1,6 +1,7 @@
 var request = require("request");
 const tokens = require("@tokens");
 const config = require("./config.json");
+let uberApiService = require("./uber-api.service");
 
 /**
  * get uber price from home to office location
@@ -10,6 +11,7 @@ exports.getUberPrice = (req, res) => {
 	let url = `${config.priceEstimateApi}?start_latitude=${tokenConfig.homeLatitude}&start_longitude=${
 		tokenConfig.homeLongitude
 	}&end_latitude=${tokenConfig.officeLatitude}&end_longitude=${tokenConfig.officeLongitude}`;
+	console.log(url);
 	let options = {
 		url: url,
 		headers: {
@@ -44,4 +46,10 @@ exports.getVehicleETA = (req, res) => {
 		}
 		res.json(JSON.parse(body));
 	});
+};
+
+exports.getProducts = async (req, res) => {
+	let token = await uberApiService.getAccessToken();
+	let products = await uberApiService.getProducts(token);
+	res.json(products);
 };
