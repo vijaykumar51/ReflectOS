@@ -194,7 +194,8 @@ newsTemplate.innerHTML = `
 			left: 0;
 			align-items: center;
     		justify-content: center;
-    		width: 100%;
+			width: 100%;
+			z-index: 10000;
 		}
 
 		#newsContainer #newsDetailOverlay #newsDetailContainer {

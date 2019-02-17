@@ -59,6 +59,7 @@ body {
 
 .top-container .screen.active-screen {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-evenly;
 	padding-top: 20px;
 }
@@ -71,4 +72,5 @@ body {
 
 .custom-comp {
 	background-color: rgba(240, 240, 214, 0.3);
+	margin-bottom: 30px;
 }

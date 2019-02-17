@@ -5,48 +5,31 @@ class UberComponent extends HTMLElement {
 		this.attachShadow({ mode: "open" });
 		this.shadowRoot.appendChild(uberTemplate.content.cloneNode(true));
 		this.distanceSelector = this.shadowRoot.querySelector("#distance");
+		this.durationSelector = this.shadowRoot.querySelector("#duration");
 		this.priceDetailSelector = this.shadowRoot.querySelector("#priceDetails");
 	}
 
 	connectedCallback() {
-		fetch(this.getAttribute("price-endpoint"))
+		fetch(this.getAttribute("estimate-endpoint"))
 			.then((data) => data.json())
 			.then((data) => {
-				let allowedVehicles = ["Auto GGN", "Pool", "MOTO", "UberGo"];
-				let distanceInKm = (data.prices[0].distance * 1.609).toFixed(2);
-				this.distanceSelector.innerHTML = `Distance: <b>${distanceInKm}</b> Km`;
+				let distanceInKm = null;
+				let tripDuration = null;
 
 				let priceFinalHtml = "";
-				data.prices.forEach((priceInfo) => {
-					if (allowedVehicles.includes(priceInfo.display_name)) {
-						allowedVehicles.splice(allowedVehicles.indexOf(priceInfo.display_name), 1);
-						let priceHtml = `<div id=${priceInfo.display_name.replace(" ", "")} class="price-container">
-								<div class="vehicle-type">${priceInfo.display_name}</div>
-								<div class="vehicle-price">${priceInfo.estimate}</div>
-								<div class="vehicle-eta"></div>
+				Object.keys(data).forEach((vehicleType) => {
+					let priceHtml = `<div id=${vehicleType.replace(" ", "")} class="price-container">
+								<div class="vehicle-type">${vehicleType}</div>
+								<div class="vehicle-price">${data[vehicleType].fare.display}</div>
+								<div class="vehicle-eta">${data[vehicleType].pickup_estimate} m</div>
 							</div>`;
-						priceFinalHtml += priceHtml;
-					}
+					priceFinalHtml += priceHtml;
+					distanceInKm = (data[vehicleType].trip.distance_estimate * 1.609).toFixed(2);
+					tripDuration = data[vehicleType].trip.duration_estimate / 60;
 				});
+				this.distanceSelector.innerHTML = `Distance: <b>${distanceInKm}</b> Km`;
+				this.durationSelector.innerHTML = `Trip Duration: <b>${tripDuration}</b> min`;
 				this.priceDetailSelector.innerHTML = priceFinalHtml;
-				this.getVehicleEta();
-			});
-	}
-
-	getVehicleEta() {
-		fetch(this.getAttribute("vehicle-eta-endpoint"))
-			.then((data) => data.json())
-			.then((data) => {
-				let allowedVehicles = ["Auto GGN", "Pool", "MOTO", "UberGo"];
-				data.times.forEach((timeInfo) => {
-					if (allowedVehicles.includes(timeInfo.display_name)) {
-						allowedVehicles.splice(allowedVehicles.indexOf(timeInfo.display_name), 1);
-						let vehicleEtaElement = this.shadowRoot.querySelector(
-							`#${timeInfo.display_name.replace(" ", "")} .vehicle-eta`
-						);
-						vehicleEtaElement.innerHTML = `${timeInfo.estimate / 60} m`;
-					}
-				});
 			});
 	}
 }
@@ -100,6 +83,7 @@ uberTemplate.innerHTML = `
 		</div>
 		<div id="rideDetailsContainer">
 			<div id="distance"></div>
+			<div id="duration"></div>
 			<div id="priceDetails"></div>
 		</div>
 	</div>
