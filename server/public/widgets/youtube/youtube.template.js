@@ -8,6 +8,7 @@ class YoutubeComponent extends HTMLElement {
 		this.shadowRoot.appendChild(youtubeTemplate.content.cloneNode(true));
 		this.youtubeIconSelector = this.shadowRoot.querySelector("#youtubeIcon");
 		this.youtubeOverlaySelector = this.shadowRoot.querySelector("#youtubeOverlay");
+		this.queryResultSelector = this.shadowRoot.querySelector("#queryResultContainer");
 		var tag = document.createElement("script");
 
 		tag.src = "https://www.youtube.com/iframe_api";
@@ -32,6 +33,22 @@ class YoutubeComponent extends HTMLElement {
 			.then((data) => data.json())
 			.then((data) => {
 				console.log(data);
+				if (data.status === 200) {
+					let recommendVideosHtml = "";
+					let videos = data.data.items;
+					videos.forEach((videoInfo) => {
+						let videoHtml = `
+							<div class="video-result">
+								<div class="video-image" video-id="${videoInfo.id}">
+									<img src="${videoInfo.snippet.thumbnails.medium.url}" video-id="${videoInfo.id}"/>
+								</div>
+								<div class="video-label" video-id="${videoInfo.id}">${videoInfo.snippet.title}</div>
+							</div>;
+						`;
+						recommendVideosHtml += videoHtml;
+					});
+					this.queryResultSelector.innerHTML = recommendVideosHtml;
+				}
 			})
 			.catch((err) => {
 				console.log(err);
@@ -137,14 +154,19 @@ youtubeTemplate.innerHTML = `
 			box-sizing: border-box;
 		}
 		#youtubeTemplate #queryResultContainer .video-result {
-			color: #000;
+			color: #232323;
 			font-weight: 600;
+			padding-bottom: 12px;
+			border-top: 3px solid #232323;
 		}
 		#youtubeTemplate #queryResultContainer .video-result img {
 			width: 200px;
+			cursor: pointer;
 		}
 		#youtubeTemplate #queryResultContainer .video-result .video-label {
 			width: 200px;
+			cursor: pointer;
+			font-size: 14px;
 		}
 		#youtubeTemplate #youtubeOverlay #playerContainer {
 			display: none;
@@ -156,7 +178,7 @@ youtubeTemplate.innerHTML = `
 		</div>
 		<div id="youtubeOverlay">
 			<div id="videoSearchBox">
-				<input type="input" id="searchQuery">
+				<input type="input" id="searchQuery" placeholder="Search">
 				<button class="search-button">
 					<span class="search-icon-container">
 						<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" class="style-scope yt-icon" style="pointer-events: none; display: block; width: 100%; height: 30px; fill: #fff;"><g class="style-scope yt-icon">
@@ -167,44 +189,7 @@ youtubeTemplate.innerHTML = `
 				</button>
 			</div>
 			<div id="videoListContainer">
-				
 				<div id="queryResultContainer">
-					<div class="video-result">
-						<div class="video-image">
-							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
-						</div>
-						<div class="video-label">A funny video about random item on youtube</div>
-					</div>
-					<div class="video-result">
-						<div class="video-image">
-							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
-						</div>
-						<div class="video-label">A funny video about random item on youtube</div>
-					</div>
-					<div class="video-result">
-						<div class="video-image">
-							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
-						</div>
-						<div class="video-label">A funny video about random item on youtube</div>
-					</div>
-					<div class="video-result">
-						<div class="video-image">
-							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
-						</div>
-						<div class="video-label">A funny video about random item on youtube</div>
-					</div>
-					<div class="video-result">
-						<div class="video-image">
-							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
-						</div>
-						<div class="video-label">A funny video about random item on youtube</div>
-					</div>
-					<div class="video-result">
-						<div class="video-image">
-							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
-						</div>
-						<div class="video-label">A funny video about random item on youtube</div>
-					</div>
 				</div>
 			</div>
 			<div id="playerContainer">
