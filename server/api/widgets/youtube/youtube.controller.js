@@ -17,7 +17,7 @@ exports.searchVideo = (req, res) => {
 			part: "snippet",
 			type: "video",
 			q: req.query.searchQuery,
-			maxResults: 3
+			maxResults: 8
 		})
 		.then((data) => {
 			res.json(data);

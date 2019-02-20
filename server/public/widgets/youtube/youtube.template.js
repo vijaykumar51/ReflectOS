@@ -60,10 +60,11 @@ class YoutubeComponent extends HTMLElement {
 	prepareSearchResults(data) {
 		let videos = data.items;
 		let finalHtml = "";
-		videos.forEach((videoInfo) => {
+		videos.forEach((videoInfo, index) => {
 			let videoHtml = `
 				<div class="video-result">
 					<div class="video-image" video-id="${videoInfo.id}">
+						<span class="video-number" video-number="${index + 1}">${index + 1}</span>	
 						<img src="${videoInfo.snippet.thumbnails.medium.url}" video-id="${videoInfo.id}"/>
 					</div>
 					<div class="video-label" video-id="${videoInfo.id}">${videoInfo.snippet.title}</div>
@@ -75,19 +76,17 @@ class YoutubeComponent extends HTMLElement {
 	}
 
 	onYouTubeIframeAPIReady() {
-		setTimeout(() => {
-			this.player =
-				this.player ||
-				new YT.Player(
-					document.body.querySelector("youtube-component").shadowRoot.querySelector("#playerContainer"),
-					{
-						height: "390",
-						width: "640",
-						videoId: "M7lc1UVf-VE"
-					}
-				);
-			console.log(this.player);
-		}, 2000);
+		this.player =
+			this.player ||
+			new YT.Player(
+				document.body.querySelector("youtube-component").shadowRoot.querySelector("#playerContainer"),
+				{
+					height: "390",
+					width: "640",
+					videoId: "M7lc1UVf-VE"
+				}
+			);
+		console.log(this.player);
 	}
 
 	onPlayerReady(event) {
@@ -175,12 +174,27 @@ youtubeTemplate.innerHTML = `
 		#youtubeTemplate #queryResultContainer .video-result {
 			color: #232323;
 			font-weight: 600;
-			padding-bottom: 12px;
-			border-top: 3px solid #232323;
+			padding-bottom: 15px;
 		}
 		#youtubeTemplate #queryResultContainer .video-result img {
 			width: 200px;
 			cursor: pointer;
+			box-shadow: 0 0 10px #333;
+			border-radius: 8px;
+		}
+		#youtubeTemplate #queryResultContainer .video-result .video-image {
+			position: relative;
+		}
+		#youtubeTemplate #queryResultContainer .video-image .video-number {
+			background: #4c4b4bfa;
+			color: #fff;
+			padding: 3px;
+			width: 20px;
+			position: absolute;
+			top: -14px;
+			left: -12px;
+			text-align: center;
+			border-radius: 5px;
 		}
 		#youtubeTemplate #queryResultContainer .video-result .video-label {
 			width: 200px;
@@ -207,6 +221,7 @@ youtubeTemplate.innerHTML = `
 					</span>
 				</button>
 			</div>
+
 			<div id="videoListContainer">
 				<div id="queryResultContainer">
 				</div>
