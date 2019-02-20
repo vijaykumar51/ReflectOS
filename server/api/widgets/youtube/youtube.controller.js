@@ -10,14 +10,14 @@ const youtube = google.youtube({
  * search video
  */
 exports.searchVideo = (req, res) => {
+	console.log("searchquery=", req.query.searchQuery);
 	youtube.search
 		.list({
 			auth: tokens[config.widgetName],
 			part: "snippet",
 			type: "video",
-			q: encodeURIComponent(req.query.searchQuery),
-			maxResults: 3,
-			order: "viewCount"
+			q: req.query.searchQuery,
+			maxResults: 3
 		})
 		.then((data) => {
 			res.json(data);

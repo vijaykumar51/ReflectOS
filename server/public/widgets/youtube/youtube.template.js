@@ -9,6 +9,7 @@ class YoutubeComponent extends HTMLElement {
 		this.youtubeIconSelector = this.shadowRoot.querySelector("#youtubeIcon");
 		this.youtubeOverlaySelector = this.shadowRoot.querySelector("#youtubeOverlay");
 		this.queryResultSelector = this.shadowRoot.querySelector("#queryResultContainer");
+		this.searchButtonSelector = this.shadowRoot.querySelector("#youtubeSearchButton");
 		var tag = document.createElement("script");
 
 		tag.src = "https://www.youtube.com/iframe_api";
@@ -26,6 +27,19 @@ class YoutubeComponent extends HTMLElement {
 		this.youtubeIconSelector.addEventListener("click", (event) => {
 			this.youtubeOverlaySelector.style.display = "flex";
 		});
+		this.searchButtonSelector.addEventListener("click", (event) => {
+			let searchQuery = this.shadowRoot.getElementById("searchQuery").value;
+			console.log("searchQuery", searchQuery);
+
+			fetch(`${this.getAttribute("search-video-endpoint")}?searchQuery=${searchQuery}`)
+				.then((data) => data.json())
+				.then((data) => {
+					console.log(data);
+					let searchVideoHtml = this.prepareSearchResults(data.data);
+					this.queryResultSelector.innerHTML = searchVideoHtml;
+				})
+				.catch((err) => console.log(err));
+		});
 	}
 
 	getPopularVideos() {
@@ -34,25 +48,30 @@ class YoutubeComponent extends HTMLElement {
 			.then((data) => {
 				console.log(data);
 				if (data.status === 200) {
-					let recommendVideosHtml = "";
-					let videos = data.data.items;
-					videos.forEach((videoInfo) => {
-						let videoHtml = `
-							<div class="video-result">
-								<div class="video-image" video-id="${videoInfo.id}">
-									<img src="${videoInfo.snippet.thumbnails.medium.url}" video-id="${videoInfo.id}"/>
-								</div>
-								<div class="video-label" video-id="${videoInfo.id}">${videoInfo.snippet.title}</div>
-							</div>;
-						`;
-						recommendVideosHtml += videoHtml;
-					});
+					let recommendVideosHtml = this.prepareSearchResults(data.data);
 					this.queryResultSelector.innerHTML = recommendVideosHtml;
 				}
 			})
 			.catch((err) => {
 				console.log(err);
 			});
+	}
+
+	prepareSearchResults(data) {
+		let videos = data.items;
+		let finalHtml = "";
+		videos.forEach((videoInfo) => {
+			let videoHtml = `
+				<div class="video-result">
+					<div class="video-image" video-id="${videoInfo.id}">
+						<img src="${videoInfo.snippet.thumbnails.medium.url}" video-id="${videoInfo.id}"/>
+					</div>
+					<div class="video-label" video-id="${videoInfo.id}">${videoInfo.snippet.title}</div>
+				</div>;
+						`;
+			finalHtml += videoHtml;
+		});
+		return finalHtml;
 	}
 
 	onYouTubeIframeAPIReady() {
@@ -179,7 +198,7 @@ youtubeTemplate.innerHTML = `
 		<div id="youtubeOverlay">
 			<div id="videoSearchBox">
 				<input type="input" id="searchQuery" placeholder="Search">
-				<button class="search-button">
+				<button class="search-button" id="youtubeSearchButton">
 					<span class="search-icon-container">
 						<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" class="style-scope yt-icon" style="pointer-events: none; display: block; width: 100%; height: 30px; fill: #fff;"><g class="style-scope yt-icon">
         					<path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" class="style-scope yt-icon"></path>
