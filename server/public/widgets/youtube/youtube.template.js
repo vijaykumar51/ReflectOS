@@ -97,21 +97,54 @@ youtubeTemplate.innerHTML = `
 			left: 0;
 			align-items: center;
     		justify-content: center;
-    		width: 100%;
+			width: 100%;
+			flex-direction: column;
+		}
+		#youtubeTemplate #videoSearchBox {
+			width: 1000px;
+			display: flex;
+		}
+		#youtubeTemplate #videoSearchBox #searchQuery {
+			width: 90%;
+			font-size: 18px;
+			line-height: 29px;
+			padding-left: 5px;
+			box-sizing: border-box;
+			box-shadow: inset 0 0px 7px #999;
+		}
+		#youtubeTemplate #videoSearchBox .search-button {
+			width: 10%;
+			height: 35px;
+			background: #ff0000;
+			border: 0px;
+		}
+		#youtubeTemplate #videoSearchBox .search-icon-container {
+			height: 30px;
+			width: 30px;
 		}
 		#youtubeTemplate #youtubeOverlay #videoListContainer {
 			width: 1000px;
+			background: rgba(255,255,255, 0.8);
 		}
 		#youtubeTemplate #youtubeOverlay #queryResultContainer {
 			height: 400px;
-			background: #999;
 			display: flex;
+			justify-content: space-evenly;
 			width: 100%;
 			flex-wrap: wrap;
 			overflow-y: scroll;
+			padding: 20px 20px 0px 20px;
+			box-sizing: border-box;
+		}
+		#youtubeTemplate #queryResultContainer .video-result {
+			color: #000;
+			font-weight: 600;
 		}
 		#youtubeTemplate #queryResultContainer .video-result img {
-			width: 250px;
+			width: 200px;
+		}
+		#youtubeTemplate #queryResultContainer .video-result .video-label {
+			width: 200px;
 		}
 		#youtubeTemplate #youtubeOverlay #playerContainer {
 			display: none;
@@ -122,35 +155,55 @@ youtubeTemplate.innerHTML = `
 		<div id="youtubeIcon">
 		</div>
 		<div id="youtubeOverlay">
+			<div id="videoSearchBox">
+				<input type="input" id="searchQuery">
+				<button class="search-button">
+					<span class="search-icon-container">
+						<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false" class="style-scope yt-icon" style="pointer-events: none; display: block; width: 100%; height: 30px; fill: #fff;"><g class="style-scope yt-icon">
+        					<path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" class="style-scope yt-icon"></path>
+							  </g>
+						</svg>
+					</span>
+				</button>
+			</div>
 			<div id="videoListContainer">
-				<div id="videoSearchBox">
-					<input type="input" id="searchQuery">
-					<button>Search</button>
-				</div>
+				
 				<div id="queryResultContainer">
 					<div class="video-result">
 						<div class="video-image">
 							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
 						</div>
-						<div class="video-label">A funny video</div>
+						<div class="video-label">A funny video about random item on youtube</div>
 					</div>
 					<div class="video-result">
 						<div class="video-image">
 							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
 						</div>
-						<div class="video-label">A funny video</div>
+						<div class="video-label">A funny video about random item on youtube</div>
 					</div>
 					<div class="video-result">
 						<div class="video-image">
 							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
 						</div>
-						<div class="video-label">A funny video</div>
+						<div class="video-label">A funny video about random item on youtube</div>
 					</div>
 					<div class="video-result">
 						<div class="video-image">
 							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
 						</div>
-						<div class="video-label">A funny video</div>
+						<div class="video-label">A funny video about random item on youtube</div>
+					</div>
+					<div class="video-result">
+						<div class="video-image">
+							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
+						</div>
+						<div class="video-label">A funny video about random item on youtube</div>
+					</div>
+					<div class="video-result">
+						<div class="video-image">
+							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
+						</div>
+						<div class="video-label">A funny video about random item on youtube</div>
 					</div>
 				</div>
 			</div>
