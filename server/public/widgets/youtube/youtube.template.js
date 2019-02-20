@@ -13,12 +13,12 @@ class YoutubeComponent extends HTMLElement {
 		tag.src = "https://www.youtube.com/iframe_api";
 		var firstScriptTag = this.shadowRoot.querySelector("#youtubeTemplate");
 		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-		// import("https://www.youtube.com/iframe_api");
 	}
 
 	connectedCallback() {
 		this.registerEvents();
-		this.onYouTubeIframeAPIReady();
+		this.getPopularVideos();
+		// this.onYouTubeIframeAPIReady();
 	}
 
 	registerEvents() {
@@ -27,13 +27,29 @@ class YoutubeComponent extends HTMLElement {
 		});
 	}
 
+	getPopularVideos() {
+		fetch(this.getAttribute("popular-video-endpoint"))
+			.then((data) => data.json())
+			.then((data) => {
+				console.log(data);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}
+
 	onYouTubeIframeAPIReady() {
 		setTimeout(() => {
-			this.player = new YT.Player("player", {
-				height: "390",
-				width: "640",
-				videoId: "M7lc1UVf-VE"
-			});
+			this.player =
+				this.player ||
+				new YT.Player(
+					document.body.querySelector("youtube-component").shadowRoot.querySelector("#playerContainer"),
+					{
+						height: "390",
+						width: "640",
+						videoId: "M7lc1UVf-VE"
+					}
+				);
 			console.log(this.player);
 		}, 2000);
 	}
@@ -83,17 +99,62 @@ youtubeTemplate.innerHTML = `
     		justify-content: center;
     		width: 100%;
 		}
+		#youtubeTemplate #youtubeOverlay #videoListContainer {
+			width: 1000px;
+		}
+		#youtubeTemplate #youtubeOverlay #queryResultContainer {
+			height: 400px;
+			background: #999;
+			display: flex;
+			width: 100%;
+			flex-wrap: wrap;
+			overflow-y: scroll;
+		}
+		#youtubeTemplate #queryResultContainer .video-result img {
+			width: 250px;
+		}
+		#youtubeTemplate #youtubeOverlay #playerContainer {
+			display: none;
+		}
 	</style>
 	
 	<div id="youtubeTemplate">
 		<div id="youtubeIcon">
 		</div>
 		<div id="youtubeOverlay">
+			<div id="videoListContainer">
+				<div id="videoSearchBox">
+					<input type="input" id="searchQuery">
+					<button>Search</button>
+				</div>
+				<div id="queryResultContainer">
+					<div class="video-result">
+						<div class="video-image">
+							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
+						</div>
+						<div class="video-label">A funny video</div>
+					</div>
+					<div class="video-result">
+						<div class="video-image">
+							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
+						</div>
+						<div class="video-label">A funny video</div>
+					</div>
+					<div class="video-result">
+						<div class="video-image">
+							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
+						</div>
+						<div class="video-label">A funny video</div>
+					</div>
+					<div class="video-result">
+						<div class="video-image">
+							<img src="https://i.ytimg.com/vi/xWgCMicmmCg/mqdefault.jpg"></img>
+						</div>
+						<div class="video-label">A funny video</div>
+					</div>
+				</div>
+			</div>
 			<div id="playerContainer">
-				<iframe width="420" height="315"
-					src="https://www.youtube.com/embed/tgbNymZ7vqY?playlist=tgbNymZ7vqY&loop=1&controls=1"
-					allowfullscreen = "true">
-				</iframe>
 			</div>
 		</div>
 	</div>

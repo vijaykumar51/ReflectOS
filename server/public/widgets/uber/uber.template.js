@@ -10,6 +10,11 @@ class UberComponent extends HTMLElement {
 	}
 
 	connectedCallback() {
+		// TODO: uncomment this when code is ready for deployment
+		this.fetchJourneyEstimates();
+	}
+
+	fetchJourneyEstimates() {
 		fetch(this.getAttribute("estimate-endpoint"))
 			.then((data) => data.json())
 			.then((data) => {

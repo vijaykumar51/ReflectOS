@@ -2,5 +2,8 @@
 	"widgetName": "youtube",
 	"widgetTab": "entertainment",
 	"widgetType": "app",
-	"widgetConfig": {}
+	"widgetConfig": {
+		"popular-video-endpoint": "/api/youtube/popular",
+		"search-video-endpoint": "/api/youtube/search"
+	}
 }

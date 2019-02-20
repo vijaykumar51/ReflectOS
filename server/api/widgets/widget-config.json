@@ -13,10 +13,10 @@
 	},
 	"youtube": {
 		"displayInTab": true,
-		"displayOnHome": false
+		"displayOnHome": true
 	},
 	"uber": {
 		"displayInTab": true,
-		"displayOnHome": true
+		"displayOnHome": false
 	}
 }
