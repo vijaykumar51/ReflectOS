@@ -2,14 +2,15 @@
 class YoutubeComponent extends HTMLElement {
 	constructor() {
 		super();
-		this.done = false;
 
 		this.attachShadow({ mode: "open" });
 		this.shadowRoot.appendChild(youtubeTemplate.content.cloneNode(true));
 		this.youtubeIconSelector = this.shadowRoot.querySelector("#youtubeIcon");
 		this.youtubeOverlaySelector = this.shadowRoot.querySelector("#youtubeOverlay");
+		this.youtubePlayerParentContainerSelector = this.shadowRoot.querySelector("#youtubePlayerParentContainer");
 		this.queryResultSelector = this.shadowRoot.querySelector("#queryResultContainer");
 		this.searchButtonSelector = this.shadowRoot.querySelector("#youtubeSearchButton");
+		this.dummy = "slkfj";
 		var tag = document.createElement("script");
 
 		tag.src = "https://www.youtube.com/iframe_api";
@@ -20,13 +21,13 @@ class YoutubeComponent extends HTMLElement {
 	connectedCallback() {
 		this.registerEvents();
 		this.getPopularVideos();
-		// this.onYouTubeIframeAPIReady();
 	}
 
 	registerEvents() {
 		this.youtubeIconSelector.addEventListener("click", (event) => {
 			this.youtubeOverlaySelector.style.display = "flex";
 		});
+		// perform search operation with entered query in search box
 		this.searchButtonSelector.addEventListener("click", (event) => {
 			let searchQuery = this.shadowRoot.getElementById("searchQuery").value;
 			console.log("searchQuery", searchQuery);
@@ -38,7 +39,11 @@ class YoutubeComponent extends HTMLElement {
 					let searchVideoHtml = this.prepareSearchResults(data.data);
 					this.queryResultSelector.innerHTML = searchVideoHtml;
 				})
-				.catch((err) => console.log(err));
+				.catch((err) => console.error(err));
+		});
+		this.queryResultSelector.addEventListener("click", (event) => {
+			let videoId = event.path[0].getAttribute("video-id");
+			this.playYoutubeVideoById(videoId);
 		});
 	}
 
@@ -46,14 +51,20 @@ class YoutubeComponent extends HTMLElement {
 		fetch(this.getAttribute("popular-video-endpoint"))
 			.then((data) => data.json())
 			.then((data) => {
-				console.log(data);
 				if (data.status === 200) {
 					let recommendVideosHtml = this.prepareSearchResults(data.data);
 					this.queryResultSelector.innerHTML = recommendVideosHtml;
+					/**
+					 * get the youtube player ready
+					 * adding timout of 2 seconds so that youtube scripts can be loaded before initialization
+					 */
+					setTimeout(() => {
+						this.initializeYoutubePlayer();
+					}, 2000);
 				}
 			})
 			.catch((err) => {
-				console.log(err);
+				console.error(err);
 			});
 	}
 
@@ -68,42 +79,35 @@ class YoutubeComponent extends HTMLElement {
 						<img src="${videoInfo.snippet.thumbnails.medium.url}" video-id="${videoInfo.id}"/>
 					</div>
 					<div class="video-label" video-id="${videoInfo.id}">${videoInfo.snippet.title}</div>
-				</div>;
+				</div>
 						`;
 			finalHtml += videoHtml;
 		});
 		return finalHtml;
 	}
 
-	onYouTubeIframeAPIReady() {
-		this.player =
-			this.player ||
+	initializeYoutubePlayer() {
+		this.youtubePlayer =
+			this.youtubePlayer ||
 			new YT.Player(
-				document.body.querySelector("youtube-component").shadowRoot.querySelector("#playerContainer"),
+				document.body.querySelector("youtube-component").shadowRoot.querySelector("#youtubePlayerContainer"),
 				{
-					height: "390",
-					width: "640",
-					videoId: "M7lc1UVf-VE"
+					height: "500",
+					width: "1000"
 				}
 			);
-		console.log(this.player);
+		console.log(this.youtubePlayer);
 	}
 
-	onPlayerReady(event) {
-		event.target.playVideo();
-	}
-
-	onPlayerStateChange(event) {
-		// if (event.data == YT.PlayerState.PLAYING && !done) {
-		// 	setTimeout(() => {
-		// 		this.stopVideo;
-		// 	}, 6000);
-		// 	this.done = true;
-		// }
-	}
-
-	stopVideo() {
-		this.player.stopVideo();
+	playYoutubeVideoById(videoId) {
+		if (!this.youtubePlayer) {
+			this.initializeYoutubePlayer();
+		}
+		if (videoId) {
+			this.queryResultSelector.style.display = "none";
+			this.youtubePlayerParentContainerSelector.style.display = "flex";
+			this.youtubePlayer.loadVideoById(videoId);
+		}
 	}
 }
 
@@ -162,12 +166,11 @@ youtubeTemplate.innerHTML = `
 			background: rgba(255,255,255, 0.8);
 		}
 		#youtubeTemplate #youtubeOverlay #queryResultContainer {
-			height: 400px;
+			height: 500px;
 			display: flex;
 			justify-content: space-evenly;
 			width: 100%;
 			flex-wrap: wrap;
-			overflow-y: scroll;
 			padding: 20px 20px 0px 20px;
 			box-sizing: border-box;
 		}
@@ -201,7 +204,7 @@ youtubeTemplate.innerHTML = `
 			cursor: pointer;
 			font-size: 14px;
 		}
-		#youtubeTemplate #youtubeOverlay #playerContainer {
+		#youtubeTemplate #youtubeOverlay #youtubePlayerParentContainer {
 			display: none;
 		}
 	</style>
@@ -223,10 +226,10 @@ youtubeTemplate.innerHTML = `
 			</div>
 
 			<div id="videoListContainer">
-				<div id="queryResultContainer">
-				</div>
+				<div id="queryResultContainer"></div>
 			</div>
-			<div id="playerContainer">
+			<div id="youtubePlayerParentContainer">
+				<div id="youtubePlayerContainer"></div>
 			</div>
 		</div>
 	</div>

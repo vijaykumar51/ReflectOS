@@ -43,7 +43,7 @@ exports.getPopularVideos = (req, res) => {
 			auth: tokens[config.widgetName],
 			part: "snippet",
 			type: "video",
-			maxResults: 20,
+			maxResults: 8,
 			chart: "mostPopular",
 			regionCode: "in"
 			// id: "10, 17, 23, 24, 30, 34, 44"
