@@ -1,4 +1,3 @@
-// import("https://www.youtube.com/iframe_api");
 class YoutubeComponent extends HTMLElement {
 	constructor() {
 		super();
@@ -53,6 +52,14 @@ class YoutubeComponent extends HTMLElement {
 			this.queryResultSelector.style.display = "flex";
 			this.youtubePlayerParentContainerSelector.style.display = "none";
 			this.previousResultSelector.style.display = "none";
+		});
+		// close news overlay
+		let youtubeOverlayCloseIconSelector = this.shadowRoot.querySelector("#youtubeOverlayCloseIcon");
+		youtubeOverlayCloseIconSelector.addEventListener("click", (event) => {
+			if (this.youtubePlayer) {
+				this.youtubePlayer.stopVideo();
+			}
+			this.youtubeOverlaySelector.style.display = "none";
 		});
 	}
 
@@ -109,9 +116,15 @@ class YoutubeComponent extends HTMLElement {
 				document.body.querySelector("youtube-component").shadowRoot.querySelector("#youtubePlayerContainer"),
 				{
 					height: "500",
-					width: "1000"
+					width: "1000",
+					playerVars: {
+						rel: 0
+					}
 				}
 			);
+		this.youtubePlayer.addEventListener("click", (event) => {
+			console.log(event);
+		});
 		console.log(this.youtubePlayer);
 	}
 
@@ -156,6 +169,18 @@ youtubeTemplate.innerHTML = `
     		justify-content: center;
 			width: 100%;
 			flex-direction: column;
+		}
+		#youtubeTemplate #youtubeOverlay #youtubeOverlayCloseIcon {
+			font-weight: bold;
+			position: absolute;
+			right: 20px;
+			top: 20px;
+			color: #bbb;
+			font-size: 36px;
+			cursor: pointer;
+		}
+		#youtubeTemplate #youtubeOverlay #youtubeOverlayCloseIcon:hover {
+			color: #999;
 		}
 		#youtubeTemplate #videoSearchBox {
 			width: 1000px;
@@ -242,6 +267,7 @@ youtubeTemplate.innerHTML = `
 		<div id="youtubeIcon">
 		</div>
 		<div id="youtubeOverlay">
+			<span id="youtubeOverlayCloseIcon">X</span>
 			<div id="videoSearchBox">
 				<input type="input" id="searchQuery" placeholder="Search">
 				<button class="search-button" id="youtubeSearchButton">
@@ -259,7 +285,9 @@ youtubeTemplate.innerHTML = `
 				<div id="queryResultContainer"></div>
 			</div>
 			<div id="youtubePlayerParentContainer">
-				<div id="youtubePlayerContainer"></div>
+				<a target="_self">
+					<div id="youtubePlayerContainer"></div>
+				</a>
 			</div>
 		</div>
 	</div>
