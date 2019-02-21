@@ -10,9 +10,9 @@ class YoutubeComponent extends HTMLElement {
 		this.youtubePlayerParentContainerSelector = this.shadowRoot.querySelector("#youtubePlayerParentContainer");
 		this.queryResultSelector = this.shadowRoot.querySelector("#queryResultContainer");
 		this.searchButtonSelector = this.shadowRoot.querySelector("#youtubeSearchButton");
-		this.dummy = "slkfj";
-		var tag = document.createElement("script");
+		this.previousResultSelector = this.shadowRoot.querySelector("#previousResultsButton");
 
+		var tag = document.createElement("script");
 		tag.src = "https://www.youtube.com/iframe_api";
 		var firstScriptTag = this.shadowRoot.querySelector("#youtubeTemplate");
 		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
@@ -35,15 +35,24 @@ class YoutubeComponent extends HTMLElement {
 			fetch(`${this.getAttribute("search-video-endpoint")}?searchQuery=${searchQuery}`)
 				.then((data) => data.json())
 				.then((data) => {
-					console.log(data);
 					let searchVideoHtml = this.prepareSearchResults(data.data);
 					this.queryResultSelector.innerHTML = searchVideoHtml;
 				})
 				.catch((err) => console.error(err));
 		});
+		// play video when user clicks on video card
 		this.queryResultSelector.addEventListener("click", (event) => {
 			let videoId = event.path[0].getAttribute("video-id");
 			this.playYoutubeVideoById(videoId);
+		});
+		// show previous video results
+		this.previousResultSelector.addEventListener("click", (event) => {
+			if (this.youtubePlayer) {
+				this.youtubePlayer.stopVideo();
+			}
+			this.queryResultSelector.style.display = "flex";
+			this.youtubePlayerParentContainerSelector.style.display = "none";
+			this.previousResultSelector.style.display = "none";
 		});
 	}
 
@@ -72,17 +81,24 @@ class YoutubeComponent extends HTMLElement {
 		let videos = data.items;
 		let finalHtml = "";
 		videos.forEach((videoInfo, index) => {
+			let videoId = typeof videoInfo.id === "string" ? videoInfo.id : videoInfo.id.videoId;
 			let videoHtml = `
 				<div class="video-result">
-					<div class="video-image" video-id="${videoInfo.id}">
+					<div class="video-image" video-id="${videoId}">
 						<span class="video-number" video-number="${index + 1}">${index + 1}</span>	
-						<img src="${videoInfo.snippet.thumbnails.medium.url}" video-id="${videoInfo.id}"/>
+						<img src="${videoInfo.snippet.thumbnails.medium.url}" video-id="${videoId}"/>
 					</div>
-					<div class="video-label" video-id="${videoInfo.id}">${videoInfo.snippet.title}</div>
+					<div class="video-label" video-id="${videoId}">${videoInfo.snippet.title}</div>
 				</div>
 						`;
 			finalHtml += videoHtml;
 		});
+		if (this.youtubePlayer) {
+			this.youtubePlayer.stopVideo();
+		}
+		this.queryResultSelector.style.display = "flex";
+		this.youtubePlayerParentContainerSelector.style.display = "none";
+		this.previousResultSelector.style.display = "none";
 		return finalHtml;
 	}
 
@@ -100,12 +116,14 @@ class YoutubeComponent extends HTMLElement {
 	}
 
 	playYoutubeVideoById(videoId) {
+		console.log(videoId);
 		if (!this.youtubePlayer) {
 			this.initializeYoutubePlayer();
 		}
 		if (videoId) {
 			this.queryResultSelector.style.display = "none";
 			this.youtubePlayerParentContainerSelector.style.display = "flex";
+			this.previousResultSelector.style.display = "inline-block";
 			this.youtubePlayer.loadVideoById(videoId);
 		}
 	}
@@ -160,6 +178,17 @@ youtubeTemplate.innerHTML = `
 		#youtubeTemplate #videoSearchBox .search-icon-container {
 			height: 30px;
 			width: 30px;
+		}
+		#youtubeTemplate #videoSearchBox #previousResultsButton {
+			background-color: #2e2e2e;
+			background-image: url(images/arrow.png);
+			background-size: contain;
+			background-repeat: no-repeat;
+			height: 35px;
+			width: 41px;
+			cursor: pointer;
+			text-align: center;
+			transform: scaleX(-1);
 		}
 		#youtubeTemplate #youtubeOverlay #videoListContainer {
 			width: 1000px;
@@ -223,6 +252,7 @@ youtubeTemplate.innerHTML = `
 						</svg>
 					</span>
 				</button>
+				<span id="previousResultsButton"></span>
 			</div>
 
 			<div id="videoListContainer">
