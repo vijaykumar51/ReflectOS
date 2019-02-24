@@ -18,5 +18,9 @@
 	"uber": {
 		"displayInTab": true,
 		"displayOnHome": false
+	},
+	"video": {
+		"displayInTab": true,
+		"displayOnHome": true
 	}
 }

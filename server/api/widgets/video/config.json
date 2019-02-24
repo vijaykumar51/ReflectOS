@@ -1,0 +1,8 @@
+{
+	"widgetName": "video",
+	"widgetTab": "entertainment",
+	"widgetType": "app",
+	"widgetConfig": {
+		"videoDirectory": "E:\\Mix videos"
+	}
+}

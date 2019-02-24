@@ -11,8 +11,17 @@
 			integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
 			crossorigin="anonymous"
 		/>
+		<script>
+			if (typeof module === "object") {
+				window.module = module;
+				module = undefined;
+			}
+		</script>
 		<script type="text/javascript" src="js/thirdparty/jquery-3.3.1.js"></script>
 		<script type="text/javascript" src="js/thirdparty/moment.js"></script>
+		<script>
+			if (window.module) module = window.module;
+		</script>
 	</head>
 	<body>
 		<!-- js files for components will be injected here. don't change below line -->
@@ -41,55 +50,57 @@
 		</div>
 
 		<script>
-			fetch("/api/config")
-				.then((data) => data.json())
-				.then((data) => {
-					Object.keys(data.tabInfo).forEach((tab) => {
-						let screenContainerInnerHtml = "";
-						let componentList = data.tabInfo[tab];
-						componentList.forEach((component) => {
-							let completeWidgetConfig = data.widgets[component];
-							let componentElement = document.createElement(`${component}-component`);
-							componentElement.setAttribute("id", `${component}Component`);
-							if (completeWidgetConfig.widgetType === "widget") {
-								componentElement.setAttribute("class", "custom-comp");
-							}
-							let componentConfig = completeWidgetConfig.widgetConfig;
-							// assign the config to web component as attributes
-							Object.keys(componentConfig).forEach((configKey) => {
-								let attributeValue =
-									typeof componentConfig[configKey] === "object"
-										? JSON.stringify(componentConfig[configKey])
-										: componentConfig[configKey];
-								componentElement.setAttribute(configKey, attributeValue);
+			$(document).ready(() => {
+				fetch("/api/config")
+					.then((data) => data.json())
+					.then((data) => {
+						Object.keys(data.tabInfo).forEach((tab) => {
+							let screenContainerInnerHtml = "";
+							let componentList = data.tabInfo[tab];
+							componentList.forEach((component) => {
+								let completeWidgetConfig = data.widgets[component];
+								let componentElement = document.createElement(`${component}-component`);
+								componentElement.setAttribute("id", `${component}Component`);
+								if (completeWidgetConfig.widgetType === "widget") {
+									componentElement.setAttribute("class", "custom-comp");
+								}
+								let componentConfig = completeWidgetConfig.widgetConfig;
+								// assign the config to web component as attributes
+								Object.keys(componentConfig).forEach((configKey) => {
+									let attributeValue =
+										typeof componentConfig[configKey] === "object"
+											? JSON.stringify(componentConfig[configKey])
+											: componentConfig[configKey];
+									componentElement.setAttribute(configKey, attributeValue);
+								});
+								screenContainerInnerHtml += componentElement.outerHTML;
 							});
-							screenContainerInnerHtml += componentElement.outerHTML;
+
+							let tabScreenContainer = document.getElementById(`${tab}ScreenContainer`);
+							tabScreenContainer.innerHTML = screenContainerInnerHtml;
 						});
-
-						let tabScreenContainer = document.getElementById(`${tab}ScreenContainer`);
-						tabScreenContainer.innerHTML = screenContainerInnerHtml;
 					});
+
+				// adding event listener on tabs to show the corresponding screen
+				$(".tab-option").on("click", (event) => {
+					$(event.currentTarget).addClass("active-tab");
+					$(event.currentTarget)
+						.siblings()
+						.removeClass("active-tab");
+
+					let clickedTab = event.currentTarget.getAttribute("id").replace("Tab", "");
+					let screenToBeShown = `#${clickedTab}ScreenContainer`;
+					$(screenToBeShown).addClass("active-screen");
+					$(screenToBeShown)
+						.siblings()
+						.removeClass("active-screen");
 				});
-
-			// adding event listener on tabs to show the corresponding screen
-			$(".tab-option").on("click", (event) => {
-				$(event.currentTarget).addClass("active-tab");
-				$(event.currentTarget)
-					.siblings()
-					.removeClass("active-tab");
-
-				let clickedTab = event.currentTarget.getAttribute("id").replace("Tab", "");
-				let screenToBeShown = `#${clickedTab}ScreenContainer`;
-				$(screenToBeShown).addClass("active-screen");
-				$(screenToBeShown)
-					.siblings()
-					.removeClass("active-screen");
 			});
 		</script>
 
 		<script>
 			// const { ipcRenderer } = require("electron");
-			// // Synchronous message emmiter and handler
+			// Synchronous message emmiter and handler
 			// console.log(ipcRenderer.sendSync("synchronous-message", "sync ping"));
 
 			// setTimeout(() => {

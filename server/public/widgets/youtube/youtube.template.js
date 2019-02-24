@@ -125,7 +125,7 @@ class YoutubeComponent extends HTMLElement {
 		this.youtubePlayer.addEventListener("click", (event) => {
 			console.log(event);
 		});
-		console.log(this.youtubePlayer);
+		// console.log(this.youtubePlayer);
 	}
 
 	playYoutubeVideoById(videoId) {
