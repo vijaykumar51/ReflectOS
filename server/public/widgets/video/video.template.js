@@ -32,9 +32,20 @@ class VideoComponent extends HTMLElement {
 		// navigate to folder on which user clicks
 		this.dirListContainerSelector.addEventListener("click", (event) => {
 			let clickedFolder = event.path[0].getAttribute("folder-name");
-			let cleanedFolderName = clickedFolder.replace(/#/g, " ");
-			this.currentDirectory = path.resolve(this.currentDirectory, cleanedFolderName);
-			this.populateDirectoryItems(this.currentDirectory);
+			let isPreviousDirectoryLink =
+				Array.from(event.path[0].classList).indexOf("previous-directory") >= 0 ? true : false;
+			console.log(event.path[0].classList);
+			console.log(event.path[0]);
+			// let isPreviousDirectoryLink = false;
+			console.log(isPreviousDirectoryLink);
+			if (isPreviousDirectoryLink) {
+				this.currentDirectory = this.currentDirectory.substr(0, this.currentDirectory.lastIndexOf(path.sep));
+				this.populateDirectoryItems(this.currentDirectory);
+			} else {
+				let cleanedFolderName = clickedFolder.replace(/#/g, " ");
+				this.currentDirectory = path.resolve(this.currentDirectory, cleanedFolderName);
+				this.populateDirectoryItems(this.currentDirectory);
+			}
 			console.log("currentDir", this.currentDirectory);
 		});
 	}
@@ -42,22 +53,25 @@ class VideoComponent extends HTMLElement {
 	// read the content of a directory and populate html for the display
 	populateDirectoryItems(directoryPath) {
 		console.log(directoryPath);
+
 		let dirInfo = fs.readdirSync(directoryPath);
-		let listHtml = "";
-		dirInfo.forEach((item) => {
-			let itemInfo = fs.statSync(directoryPath, path.resolve(item));
-			console.log(itemInfo);
-			if (itemInfo.isDirectory()) {
-				let itemId = item.replace(/ /g, "#");
-				let itemHtml = `
-					<div class="dir-list-item" folder-name=${itemId}>
-						<span class="folder-icon fas fa-folder-open" folder-name=${itemId}></span>
-						<span class="list-item-label" folder-name=${itemId}>${item}</span>
-					</div>
-				`;
-				listHtml += itemHtml;
-			}
+		let dirItems = dirInfo.filter((file) => fs.statSync(path.resolve(directoryPath, file)).isDirectory());
+		let listHtml = `
+			<div class="dir-list-item previous-directory">
+				<span class="folder-icon previous-directory fa fa-arrow-left"></span>
+			</div>
+		`;
+		dirItems.forEach((directory) => {
+			let itemId = directory.replace(/ /g, "#");
+			let itemHtml = `
+				<div class="dir-list-item" folder-name=${itemId}>
+					<span class="folder-icon fas fa-folder-open" folder-name=${itemId}></span>
+					<span class="list-item-label" folder-name=${itemId}>${directory}</span>
+				</div>
+			`;
+			listHtml += itemHtml;
 		});
+
 		this.dirListContainerSelector.innerHTML = listHtml;
 	}
 }
