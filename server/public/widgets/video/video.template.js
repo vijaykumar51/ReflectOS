@@ -31,22 +31,28 @@ class VideoComponent extends HTMLElement {
 
 		// navigate to folder on which user clicks
 		this.dirListContainerSelector.addEventListener("click", (event) => {
-			let clickedFolder = event.path[0].getAttribute("folder-name");
-			let isPreviousDirectoryLink =
-				Array.from(event.path[0].classList).indexOf("previous-directory") >= 0 ? true : false;
-			console.log(event.path[0].classList);
-			console.log(event.path[0]);
-			// let isPreviousDirectoryLink = false;
-			console.log(isPreviousDirectoryLink);
-			if (isPreviousDirectoryLink) {
-				this.currentDirectory = this.currentDirectory.substr(0, this.currentDirectory.lastIndexOf(path.sep));
-				this.populateDirectoryItems(this.currentDirectory);
-			} else {
-				let cleanedFolderName = clickedFolder.replace(/#/g, " ");
-				this.currentDirectory = path.resolve(this.currentDirectory, cleanedFolderName);
-				this.populateDirectoryItems(this.currentDirectory);
+			let clickedItemType = event.path[0].getAttribute("type");
+			if (clickedItemType === "dir") {
+				let clickedFolder = event.path[0].getAttribute("folder-name");
+				let isPreviousDirectoryLink =
+					Array.from(event.path[0].classList).indexOf("previous-directory") >= 0 ? true : false;
+
+				// if the clicked link is for previous directory, navigate to previous directory else open the clicked folder
+				if (isPreviousDirectoryLink) {
+					this.currentDirectory = this.currentDirectory.substr(
+						0,
+						this.currentDirectory.lastIndexOf(path.sep)
+					);
+					this.populateDirectoryItems(this.currentDirectory);
+				} else {
+					let cleanedFolderName = clickedFolder.replace(/#/g, " ");
+					this.currentDirectory = path.resolve(this.currentDirectory, cleanedFolderName);
+					this.populateDirectoryItems(this.currentDirectory);
+				}
+				console.log("currentDir", this.currentDirectory);
+			} else if (clickedItemType === "file") {
+				console.log("you clicked file");
 			}
-			console.log("currentDir", this.currentDirectory);
 		});
 	}
 
@@ -54,25 +60,50 @@ class VideoComponent extends HTMLElement {
 	populateDirectoryItems(directoryPath) {
 		console.log(directoryPath);
 
-		let dirInfo = fs.readdirSync(directoryPath);
-		let dirItems = dirInfo.filter((file) => fs.statSync(path.resolve(directoryPath, file)).isDirectory());
 		let listHtml = `
-			<div class="dir-list-item previous-directory">
-				<span class="folder-icon previous-directory fa fa-arrow-left"></span>
+			<div class="dir-list-item previous-directory" type="dir">
+				<span class="folder-icon previous-directory fa fa-arrow-left" type="dir"></span>
 			</div>
 		`;
-		dirItems.forEach((directory) => {
-			let itemId = directory.replace(/ /g, "#");
-			let itemHtml = `
-				<div class="dir-list-item" folder-name=${itemId}>
-					<span class="folder-icon fas fa-folder-open" folder-name=${itemId}></span>
-					<span class="list-item-label" folder-name=${itemId}>${directory}</span>
-				</div>
-			`;
-			listHtml += itemHtml;
-		});
 
+		let dirInfo = fs.readdirSync(directoryPath);
+		dirInfo.forEach((item) => {
+			let itemStats = fs.statSync(path.resolve(directoryPath, item));
+			if (itemStats.isDirectory()) {
+				let itemId = item.replace(/ /g, "#");
+				let dirHtml = `
+						<div class="dir-list-item" folder-name=${itemId} type="dir">
+							<span class="folder-icon fas fa-folder-open" folder-name=${itemId} type="dir"></span>
+							<span class="list-item-label" folder-name=${itemId} type="dir">${item}</span>
+						</div>
+					`;
+				listHtml += dirHtml;
+			} else if (itemStats.isFile() && (this.isVideoFile(item) || this.isAudioFile(item))) {
+				let itemId = item.replace(/ /g, "#");
+				let fileHtml = `
+					<div class="dir-list-item" folder-name=${itemId} type="file">
+						<span class="folder-icon fas fa-folder-open" folder-name=${itemId} type="file"></span>
+						<span class="list-item-label" folder-name=${itemId} type="file">${item}</span>
+					</div>
+				`;
+				listHtml += fileHtml;
+			}
+		});
 		this.dirListContainerSelector.innerHTML = listHtml;
+	}
+
+	isAudioFile(fileName) {
+		let audioFormats = ["mp3"];
+		let extension = fileName.substr(fileName.lastIndexOf(".") + 1);
+		console.log(extension);
+		return audioFormats.indexOf(extension) >= 0;
+	}
+
+	isVideoFile(fileName) {
+		let videoFormats = ["mp4"];
+		let extension = fileName.substr(fileName.lastIndexOf(".") + 1);
+		console.log(extension);
+		return videoFormats.indexOf(extension) >= 0;
 	}
 }
 
@@ -121,6 +152,10 @@ videoTemplate.innerHTML = `
 		}
 		#videoTemplate #videoAppContainer {
 			width: 80%;
+		}
+		#videoTemplate #dirListContainer {
+			height: 500px;
+			overflow: auto;
 		}
 		#videoTemplate #dirListContainer .dir-list-item {
 			border-top: 1px solid #ffc;
