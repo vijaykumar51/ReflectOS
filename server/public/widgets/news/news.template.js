@@ -39,13 +39,11 @@ class NewsComponent extends HTMLElement {
 		// show overlay on click on news headline
 		newsBodyContainer.addEventListener("click", (event) => {
 			let index = event.path[0].getAttribute("index");
-			console.log(index);
 			if (index !== null && index >= 0 && this.newsData) {
 				let newsDetails =
 					this.newsData.body && this.newsData.body[index]
 						? this.newsData.body[index]
 						: "Unable to fetch news details";
-				console.log(newsDetails);
 				let newsImageUrl = this.newsData.image && this.newsData.image[index] ? this.newsData.image[index] : "";
 				let newsHeading =
 					this.newsData.headline && this.newsData.headline[index] ? this.newsData.headline[index] : "";

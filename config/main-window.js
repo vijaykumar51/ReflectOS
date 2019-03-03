@@ -6,7 +6,10 @@ var mainWindowConfig = {
 	resizable: true,
 	title: "Reflect OS",
 	backgroundColor: "#efefef",
-	darkTheme: true
+	darkTheme: true,
+	webPreferences: {
+		webSecurity: false
+	}
 };
 
 module.exports = mainWindowConfig;

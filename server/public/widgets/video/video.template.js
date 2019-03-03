@@ -26,10 +26,13 @@ class VideoComponent extends HTMLElement {
 		});
 
 		this.videoOverlayCloseIconSelector.addEventListener("click", (event) => {
+			if (this.plyrVideoPlayer) {
+				this.play;
+			}
 			this.videoOverlaySelector.style.display = "none";
 		});
 
-		// navigate to folder on which user clicks
+		// navigate to folder on which user clicks on folder or play the file
 		this.dirListContainerSelector.addEventListener("click", (event) => {
 			let clickedItemType = event.path[0].getAttribute("type");
 			if (clickedItemType === "dir") {
@@ -49,11 +52,65 @@ class VideoComponent extends HTMLElement {
 					this.currentDirectory = path.resolve(this.currentDirectory, cleanedFolderName);
 					this.populateDirectoryItems(this.currentDirectory);
 				}
-				console.log("currentDir", this.currentDirectory);
 			} else if (clickedItemType === "file") {
-				console.log("you clicked file");
+				if (!this.plyrVideoPlayer || !this.plyrAudioPlayer) {
+					this.initializePlyrPlayers();
+				}
+				let clickedFile = event.path[0].getAttribute("file-name");
+				let cleanedFileName = clickedFile.replace(/#/g, " ");
+				let fullFilePath = path.resolve(this.currentDirectory, cleanedFileName);
+				let fileType = this.isAudioFile(cleanedFileName)
+					? "audio"
+					: this.isVideoFile(cleanedFileName)
+					? "video"
+					: "";
+				this.playFile(fullFilePath, cleanedFileName, fileType);
 			}
 		});
+	}
+
+	initializePlyrPlayers() {
+		this.plyrVideoPlayer = new Plyr(
+			document.body.querySelector("video-component").shadowRoot.querySelector("#videoPlayer"),
+			{
+				autoplay: true
+			}
+		);
+		console.log(this.plyrVideoPlayer);
+		this.plyrAudioPlayer = new Plyr(
+			document.body.querySelector("video-component").shadowRoot.querySelector("#audioPlayer"),
+			{
+				autoplay: true
+			}
+		);
+		console.log(this.plyrAudioPlayer);
+	}
+
+	playFile(fileLocation, fileName, fileType) {
+		if (this.isAudioFile(fileName)) {
+			this.plyrAudioPlayer.source = {
+				type: "audio",
+				title: fileName,
+				sources: [
+					{
+						src: fileLocation,
+						type: "audio/mp3"
+					}
+				]
+			};
+		} else if (this.isVideoFile(fileName)) {
+			this.plyrVideoPlayer.source = {
+				type: "video",
+				title: fileName,
+				sources: [
+					{
+						src: fileLocation,
+						type: "video/mp4",
+						size: 720
+					}
+				]
+			};
+		}
 	}
 
 	// read the content of a directory and populate html for the display
@@ -81,9 +138,9 @@ class VideoComponent extends HTMLElement {
 			} else if (itemStats.isFile() && (this.isVideoFile(item) || this.isAudioFile(item))) {
 				let itemId = item.replace(/ /g, "#");
 				let fileHtml = `
-					<div class="dir-list-item" folder-name=${itemId} type="file">
-						<span class="folder-icon fas fa-folder-open" folder-name=${itemId} type="file"></span>
-						<span class="list-item-label" folder-name=${itemId} type="file">${item}</span>
+					<div class="dir-list-item" file-name=${itemId} type="file">
+						<span class="folder-icon fas fa-folder-open" file-name=${itemId} type="file"></span>
+						<span class="list-item-label" file-name=${itemId} type="file">${item}</span>
 					</div>
 				`;
 				listHtml += fileHtml;
@@ -95,14 +152,12 @@ class VideoComponent extends HTMLElement {
 	isAudioFile(fileName) {
 		let audioFormats = ["mp3"];
 		let extension = fileName.substr(fileName.lastIndexOf(".") + 1);
-		console.log(extension);
 		return audioFormats.indexOf(extension) >= 0;
 	}
 
 	isVideoFile(fileName) {
 		let videoFormats = ["mp4"];
 		let extension = fileName.substr(fileName.lastIndexOf(".") + 1);
-		console.log(extension);
 		return videoFormats.indexOf(extension) >= 0;
 	}
 }
@@ -115,6 +170,8 @@ videoTemplate.innerHTML = `
 		integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
 		crossorigin="anonymous"
 	/>
+	<link rel="stylesheet" href="css/thirdparty/plyr.css"/>
+
 	<style>
 		:host {
 			display: inline-block;
@@ -177,6 +234,17 @@ videoTemplate.innerHTML = `
 		<div id="videoOverlay">
 			<span id="videoOverlayCloseIcon" class="fa fa-times"></span>
 			<div id="videoAppContainer">
+				<div id="mediaPlayer">
+					<div id="plyrVideoPlayer">
+						<video id="videoPlayer" playsinline controls>
+							<source src="https://cdn.plyr.io/static/blank.mp4" type="video/mp4" />
+						</video>
+					</div>
+					<div id="plyrAudioPlayer">
+						<audio id="audioPlayer" controls>
+						</audio>
+					</div>
+				</div>
 				<div id="dirListContainer">
 				</div>
 			</div>
