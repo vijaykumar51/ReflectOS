@@ -12,6 +12,8 @@ class VideoComponent extends HTMLElement {
 		this.videoOverlayCloseIconSelector = this.shadowRoot.querySelector("#videoOverlayCloseIcon");
 		this.videoAppContainerSelector = this.shadowRoot.querySelector("#videoAppContainer");
 		this.dirListContainerSelector = this.shadowRoot.querySelector("#dirListContainer");
+		this.plyrVideoPlayerSelector = this.shadowRoot.querySelector("#plyrVideoPlayer");
+		this.plyrAudioPlayerSelector = this.shadowRoot.querySelector("#plyrAudioPlayer");
 	}
 
 	connectedCallback() {
@@ -26,9 +28,7 @@ class VideoComponent extends HTMLElement {
 		});
 
 		this.videoOverlayCloseIconSelector.addEventListener("click", (event) => {
-			if (this.plyrVideoPlayer) {
-				this.play;
-			}
+			this.stopPlyrPlayers();
 			this.videoOverlaySelector.style.display = "none";
 		});
 
@@ -59,12 +59,7 @@ class VideoComponent extends HTMLElement {
 				let clickedFile = event.path[0].getAttribute("file-name");
 				let cleanedFileName = clickedFile.replace(/#/g, " ");
 				let fullFilePath = path.resolve(this.currentDirectory, cleanedFileName);
-				let fileType = this.isAudioFile(cleanedFileName)
-					? "audio"
-					: this.isVideoFile(cleanedFileName)
-					? "video"
-					: "";
-				this.playFile(fullFilePath, cleanedFileName, fileType);
+				this.playFile(fullFilePath, cleanedFileName);
 			}
 		});
 	}
@@ -78,16 +73,25 @@ class VideoComponent extends HTMLElement {
 		);
 		console.log(this.plyrVideoPlayer);
 		this.plyrAudioPlayer = new Plyr(
-			document.body.querySelector("video-component").shadowRoot.querySelector("#audioPlayer"),
-			{
-				autoplay: true
-			}
+			document.body.querySelector("video-component").shadowRoot.querySelector("#audioPlayer")
 		);
 		console.log(this.plyrAudioPlayer);
 	}
 
-	playFile(fileLocation, fileName, fileType) {
+	stopPlyrPlayers() {
+		if (this.plyrAudioPlayer && this.plyrAudioPlayer.playing) {
+			this.plyrAudioPlayer.stop();
+		}
+		if (this.plyrVideoPlayer && this.plyrVideoPlayer.playing) {
+			this.plyrVideoPlayer.stop();
+		}
+	}
+
+	playFile(fileLocation, fileName) {
 		if (this.isAudioFile(fileName)) {
+			this.plyrAudioPlayerSelector.style.display = "flex";
+			this.plyrVideoPlayerSelector.style.display = "none";
+			this.plyrVideoPlayer.stop();
 			this.plyrAudioPlayer.source = {
 				type: "audio",
 				title: fileName,
@@ -98,7 +102,11 @@ class VideoComponent extends HTMLElement {
 					}
 				]
 			};
+			this.plyrAudioPlayer.play();
 		} else if (this.isVideoFile(fileName)) {
+			this.plyrAudioPlayerSelector.style.display = "none";
+			this.plyrVideoPlayerSelector.style.display = "flex";
+			this.plyrAudioPlayer.stop();
 			this.plyrVideoPlayer.source = {
 				type: "video",
 				title: fileName,
@@ -110,6 +118,8 @@ class VideoComponent extends HTMLElement {
 					}
 				]
 			};
+		} else {
+			console.error("invalid file type");
 		}
 	}
 
@@ -209,6 +219,12 @@ videoTemplate.innerHTML = `
 		}
 		#videoTemplate #videoAppContainer {
 			width: 80%;
+		}
+		#videoTemplate #videoAppContainer #plyrVideoPlayer {
+			
+		}
+		#videoTemplate #videoAppContainer #plyrAudioPlayer {
+			
 		}
 		#videoTemplate #dirListContainer {
 			height: 500px;
