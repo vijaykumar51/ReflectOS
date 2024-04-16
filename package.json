@@ -32,7 +32,7 @@
 		"googleapis": "^37.2.0",
 		"module-alias": "^2.1.0",
 		"request": "^2.88.0",
-		"request-promise-native": "^1.0.7",
+		"request-promise-native": "^1.0.9",
 		"rxjs": "~6.3.3",
 		"tslib": "^1.9.0",
 		"walkdir": "^0.3.2"
