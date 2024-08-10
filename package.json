@@ -25,7 +25,7 @@
 	},
 	"dependencies": {
 		"@webcomponents/custom-elements": "^1.2.1",
-		"cheerio": "^1.0.0-rc.2",
+		"cheerio": "^1.0.0",
 		"core-js": "^2.5.4",
 		"express": "^4.16.4",
 		"glob": "^7.1.3",
